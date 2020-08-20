@@ -7,11 +7,15 @@ package.EvergreenComponentCommon = {
             JDK8 = 1.0;
             BrazilGradle = 5.x;
             BrazilGradleQualityDefaults = 5.x;
+
+            Lombok = 1.18.x;
         };
     };
 
     dependencies = {
         1.0 = {
+            Jackson-databind = 2.9.x;
+            Semver4j = 3.x;
         };
     };
 
