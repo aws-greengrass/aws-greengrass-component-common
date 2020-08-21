@@ -14,7 +14,8 @@ package.EvergreenComponentCommon = {
 
     dependencies = {
         1.0 = {
-            Jackson-databind = 2.9.x;
+            Jackson-databind = 2.10.x;
+            Jackson-dataformat-yaml =2.10.x;
             Semver4j = 3.x;
         };
     };
@@ -25,6 +26,7 @@ package.EvergreenComponentCommon = {
             # and remove 'useJUnitPlatform' from build.gradle. For mixed
             # JUnit 4 and 5 tests, keep this and add 'JUnit-4-12-migration = 5.x;'
             JUnit5 = 5.x;
+            Hamcrest = 2.x;
         };
     };
 
