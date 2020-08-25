@@ -21,6 +21,8 @@ plugins {
   // JaCoCo for coverage metrics and reports of Java source files. Read more at:
   // https://docs.gradle.org/current/userguide/jacoco_plugin.html
   id 'jacoco'
+
+  id 'maven-publish'
 }
 
 /*
@@ -79,12 +81,19 @@ spotbugs {
   ignoreFailures = false
 }
 
+repositories {
+  mavenCentral()
+}
+
 /*
  Resolve build and test dependencies using BrazilGradle.
 */
 dependencies {
-  implementation brazilGradle.build()
-  testImplementation brazilGradle.testbuild()
+  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.1'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
+  implementation 'com.vdurmont:semver4j:3.1.0'
+  testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+  testImplementation 'org.hamcrest:hamcrest-core:2.2'
 
   compileOnly brazilGradle.tool('Lombok')
   annotationProcessor brazilGradle.tool('Lombok')
@@ -98,5 +107,22 @@ dependencies {
 */
 test {
   useJUnitPlatform()
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId = 'com.aws.iot'
+      artifactId = 'component-common'
+      version = '0.0.0-SNAPSHOT'
+      from components.java
+    }
+  }
+  repositories {
+    maven {
+      url 's3://eg-component-share-lib'
+      authentication { awsIm(AwsImAuthentication) }
+    }
+  }
 }
 
