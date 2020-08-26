@@ -2,11 +2,12 @@ package com.amazon.aws.iot.greengrass.component.common;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import lombok.Builder;
+import lombok.Value;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import lombok.Builder;
-import lombok.Value;
 
 @JsonDeserialize(builder = PlatformSpecificManifest.PlatformSpecificManifestBuilder.class)
 @Value

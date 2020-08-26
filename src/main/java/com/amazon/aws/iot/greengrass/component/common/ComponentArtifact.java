@@ -1,14 +1,16 @@
 package com.amazon.aws.iot.greengrass.component.common;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import java.net.URI;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@JsonDeserialize(builder = ComponentArtifact.ComponentArtifactBuilder.class)
-@Value
+import java.net.URI;
+
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ComponentArtifact {
     URI uri;
 
@@ -16,9 +18,5 @@ public class ComponentArtifact {
 
     String algorithm;
 
-    String unarchive;
-
-    @JsonPOJOBuilder(withPrefix = "")
-    public static class ComponentArtifactBuilder {
-    }
+    Unarchive unarchive;
 }

@@ -1,44 +1,45 @@
 package com.amazon.aws.iot.greengrass.component.common;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.hamcrest.collection.IsMapContaining;
 import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ComponentRecipeDeserializationTest {
-    private static final ObjectMapper DESERIALIZER = SerializerFactory.getRecipeSerializer();
-
-    private static Path SAMPLE_RECIPES_PATH;
-
-    static {
-        try {
-            SAMPLE_RECIPES_PATH = Paths.get(ComponentRecipeDeserializationTest.class.getClassLoader()
-                    .getResource("recipes")
-                    .toURI());
-        } catch (URISyntaxException ignore) {
-        }
-    }
+public class ComponentRecipeDeserializationTest extends BaseRecipeTest {
 
     @Test
-    void GIVEN_recipe_with_all_possible_fields_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
+    void GIVEN_recipe_with_all_possible_fields_yaml_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
         String filename = "sample-recipe-with-all-fields.yaml";
         Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
 
-        ComponentRecipe recipe = DESERIALIZER.readValue(new String(Files.readAllBytes(recipePath)),
+        ComponentRecipe recipe = DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
                 ComponentRecipe.class);
 
+        verifyRecipeWithAllFields(recipe);
+    }
+
+    @Test
+    void GIVEN_recipe_with_all_possible_fields_json_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
+        String filename = "sample-recipe-with-all-fields.json";
+        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+
+        ComponentRecipe recipe = DESERIALIZER_JSON.readValue(new String(Files.readAllBytes(recipePath)),
+                ComponentRecipe.class);
+
+        verifyRecipeWithAllFields(recipe);
+    }
+
+    void verifyRecipeWithAllFields(final ComponentRecipe recipe) {
         assertThat(recipe.getComponentName(), Is.is("FooService"));
         assertThat(recipe.getVersion()
                 .getValue(), Is.is("1.0.0"));
-        assertThat(recipe.getComponentType(), Is.is("raw"));
+        assertThat(recipe.getComponentType(), Is.is(ComponentType.PLUGIN));
         assertThat(recipe.getManifests()
                 .size(), Is.is(2));
         PlatformSpecificManifest manifest = recipe.getManifests()
@@ -60,6 +61,7 @@ public class ComponentRecipeDeserializationTest {
                 .toString(), Is.is("s3://some-bucket/hello_world.py"));
         assertThat(artifact.getDigest(), Is.is("d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f"));
         assertThat(artifact.getAlgorithm(), Is.is("SHA-256"));
+        assertThat(artifact.getUnarchive(), Is.is(Unarchive.ZIP));
         assertThat(manifest.getDependencies()
                 .size(), Is.is(2));
         assertThat(manifest.getDependencies(), IsMapContaining.hasEntry("BarService",
@@ -92,13 +94,28 @@ public class ComponentRecipeDeserializationTest {
     }
 
     @Test
-    void GIVEN_a_wrapper_component_recipe_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
+    void GIVEN_a_wrapper_component_recipe_yaml_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
         String filename = "wrapper-component-recipe.yaml";
         Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
 
-        ComponentRecipe recipe = DESERIALIZER.readValue(new String(Files.readAllBytes(recipePath)),
+        ComponentRecipe recipe = DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
                 ComponentRecipe.class);
 
+        verifyWrapperComponentRecipe(recipe);
+    }
+
+    @Test
+    void GIVEN_a_wrapper_component_recipe_json_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
+        String filename = "wrapper-component-recipe.json";
+        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+
+        ComponentRecipe recipe = DESERIALIZER_JSON.readValue(new String(Files.readAllBytes(recipePath)),
+                ComponentRecipe.class);
+
+        verifyWrapperComponentRecipe(recipe);
+    }
+
+    void verifyWrapperComponentRecipe(final ComponentRecipe recipe) {
         assertThat(recipe.getComponentName(), Is.is("PythonRuntime"));
         assertThat(recipe.getVersion()
                 .getValue(), Is.is("1.1.0"));

@@ -4,7 +4,7 @@ componentName: FooService
 description: Test recipe for Evergreen packages
 publisher: Me
 version: '1.0.0'
-componentType: raw
+componentType: plugin
 manifests:
   - platform:
       os: windows
@@ -18,6 +18,7 @@ manifests:
       - uri: s3://some-bucket/hello_world.py
         digest: d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f
         algorithm: SHA-256
+        unarchive: ZIP
       - uri: s3//some-bucket/hello-world2.py
         digest: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
         algorithm: SHA-256

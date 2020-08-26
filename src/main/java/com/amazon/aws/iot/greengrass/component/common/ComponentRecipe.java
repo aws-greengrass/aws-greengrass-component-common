@@ -3,9 +3,12 @@ package com.amazon.aws.iot.greengrass.component.common;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.vdurmont.semver4j.Semver;
+
 import java.util.Collections;
 import java.util.List;
+
 import lombok.Builder;
 import lombok.Value;
 
@@ -18,13 +21,16 @@ public class ComponentRecipe {
 
     String componentName;
 
+    @JsonSerialize(using = SemverSerializer.class)
     Semver version;
 
-    String componentType;
+    ComponentType componentType;
 
     String description;
 
     String publisher;
+
+    String source;
 
     @Builder.Default
     List<PlatformSpecificManifest> manifests = Collections.emptyList();
