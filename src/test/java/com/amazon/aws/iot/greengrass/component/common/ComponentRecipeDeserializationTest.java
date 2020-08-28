@@ -8,10 +8,11 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ComponentRecipeDeserializationTest extends BaseRecipeTest {
+class ComponentRecipeDeserializationTest extends BaseRecipeTest {
 
     @Test
     void GIVEN_recipe_with_all_possible_fields_yaml_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
@@ -53,6 +54,16 @@ public class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertThat(manifest.getLifecycle()
                 .size(), Is.is(1));
         assertThat(manifest.getLifecycle(), IsMapContaining.hasKey("install"));
+
+        // verify param
+        List<ComponentParameter> parameters = manifest.getParameters();
+        assertThat(parameters
+                .size(), Is.is(1));
+        ComponentParameter testParam = parameters.get(0);
+        assertThat(testParam.getName(), Is.is("TestParam"));
+        assertThat(testParam.getValue(), Is.is("TestValue"));
+        assertThat(testParam.getType(), Is.is(ComponentParameter.ParameterType.STRING));
+
         assertThat(manifest.getArtifacts()
                 .size(), Is.is(2));
         ComponentArtifact artifact = manifest.getArtifacts()

@@ -9,7 +9,7 @@ import java.nio.file.Path;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ComponentRecipeSerializationTest extends BaseRecipeTest {
+class ComponentRecipeSerializationTest extends BaseRecipeTest {
 
     @Test
     void GIVEN_a_recipe_file_yaml_WHEN_we_deserialize_it_and_serialize_it_back_THEN_we_get_the_same_thing() throws IOException {

@@ -10,6 +10,10 @@ manifests:
       os: windows
       osVersion: ^10.0.1
       architecture: x86_64
+    parameters:
+      - name: TestParam
+        value: 'TestValue'
+        type: STRING
     lifecycle:
       install:
         skipif: onpath git
