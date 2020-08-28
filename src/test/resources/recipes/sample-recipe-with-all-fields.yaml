@@ -8,8 +8,7 @@ componentType: plugin
 manifests:
   - platform:
       os: windows
-      osVersion: ^10.0.1
-      architecture: x86_64
+      architecture: amd64
     parameters:
       - name: TestParam
         value: 'TestValue'

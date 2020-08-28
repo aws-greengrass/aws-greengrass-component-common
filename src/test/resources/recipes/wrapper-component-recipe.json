@@ -8,8 +8,7 @@
     {
       "platform": {
         "os": "linux",
-        "osVersion": "^4.8",
-        "architecture": "x86_64"
+        "architecture": "amd64"
       },
       "lifecycle": {
         "install": "apt-get install python3.7"

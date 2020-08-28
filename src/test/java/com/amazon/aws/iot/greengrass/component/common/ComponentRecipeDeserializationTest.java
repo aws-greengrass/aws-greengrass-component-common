@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ComponentRecipeDeserializationTest extends BaseRecipeTest {
 
@@ -45,12 +46,8 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .size(), Is.is(2));
         PlatformSpecificManifest manifest = recipe.getManifests()
                 .get(0);
-        assertThat(manifest.getPlatform()
-                .getOs(), Is.is("windows"));
-        assertThat(manifest.getPlatform()
-                .getArchitecture(), Is.is("x86_64"));
-        assertThat(manifest.getPlatform()
-                .getOsVersion(), Is.is("^10.0.1"));
+        assertEquals(Platform.OS.WINDOWS, manifest.getPlatform().getOs());
+        assertEquals(Platform.Architecture.AMD64, manifest.getPlatform().getArchitecture());
         assertThat(manifest.getLifecycle()
                 .size(), Is.is(1));
         assertThat(manifest.getLifecycle(), IsMapContaining.hasKey("install"));
@@ -134,12 +131,8 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .size(), Is.is(1));
         PlatformSpecificManifest manifest = recipe.getManifests()
                 .get(0);
-        assertThat(manifest.getPlatform()
-                .getOs(), Is.is("linux"));
-        assertThat(manifest.getPlatform()
-                .getArchitecture(), Is.is("x86_64"));
-        assertThat(manifest.getPlatform()
-                .getOsVersion(), Is.is("^4.8"));
+        assertEquals(Platform.OS.LINUX, manifest.getPlatform().getOs());
+        assertEquals(Platform.Architecture.AMD64, manifest.getPlatform().getArchitecture());
         assertThat(manifest.getLifecycle()
                 .size(), Is.is(1));
         assertThat(manifest.getLifecycle(), IsMapContaining.hasEntry("install", "apt-get install python3.7"));
