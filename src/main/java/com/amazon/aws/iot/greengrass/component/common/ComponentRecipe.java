@@ -5,22 +5,24 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.vdurmont.semver4j.Semver;
+import lombok.Builder;
+import lombok.NonNull;
+import lombok.Value;
 
 import java.util.Collections;
 import java.util.List;
-
-import lombok.Builder;
-import lombok.Value;
 
 @JsonDeserialize(builder = ComponentRecipe.ComponentRecipeBuilder.class)
 @Value
 @Builder
 public class ComponentRecipe {
-
+    @NonNull
     RecipeTemplateVersion templateVersion;
 
+    @NonNull
     String componentName;
 
+    @NonNull
     @JsonSerialize(using = SemverSerializer.class)
     Semver version;
 

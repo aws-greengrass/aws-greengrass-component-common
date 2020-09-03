@@ -11,7 +11,9 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ComponentRecipeDeserializationTest extends BaseRecipeTest {
 
@@ -24,6 +26,28 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 ComponentRecipe.class);
 
         verifyRecipeWithAllFields(recipe);
+    }
+
+    @Test
+    void GIVEN_recipe_with_missing_required_field_uri_yaml_WHEN_attempt_to_deserialize_THEN_throws_exception() {
+        String filename = "sample-recipe-fail-missing-uri.yaml";
+        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
+                ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("uri is marked non-null but is null"));
+    }
+
+    @Test
+    void GIVEN_recipe_with_missing_required_field_versionRequirement_yaml_WHEN_attempt_to_deserialize_THEN_throws_exception() {
+        String filename = "sample-recipe-fail-missing-versionRequirement.yaml";
+        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
+                        ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("versionRequirement is marked non-null but is null"));
     }
 
     @Test

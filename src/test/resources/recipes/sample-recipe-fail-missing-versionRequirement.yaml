@@ -1,0 +1,10 @@
+---
+templateVersion: 2020-01-25
+componentName: FooService
+description: Test recipe for Evergreen packages
+publisher: Me
+version: '1.0.0'
+componentType: plugin
+manifests:
+  - dependencies:
+      abc: {}
