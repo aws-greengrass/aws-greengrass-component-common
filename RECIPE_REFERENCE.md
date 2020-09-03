@@ -61,6 +61,7 @@ RecipeTemplateVersion: '2020-01-25'
 Component name identifier, reverse DNS notation is recommended. Component name is unique within a private component
  registry. A private component which has same name occludes public available component.
 > note: component name is also used as service name, since component to service is 1:1 mapping.
+
 ```yaml
 componentName: com.aws.greengrass.HelloWorld
 ```
@@ -182,6 +183,7 @@ Indicate whether automatically unarchive artifact
 #### MANIFEST.DEPENDENCIES
 Describe component dependencies, the versions of dependencies will be resolved during deployment.
 > note: Services represented by components will be started/stopped with respect to dependency order.
+
 ```yaml
 Dependencies:
     shared.python:
