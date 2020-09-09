@@ -89,11 +89,13 @@ repositories {
  Resolve build and test dependencies using BrazilGradle.
 */
 dependencies {
-  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.1'
-  implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
-  implementation 'com.vdurmont:semver4j:3.1.0'
-  testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
-  testImplementation 'org.hamcrest:hamcrest-core:2.2'
+//  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.1'
+//  implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
+//  implementation 'com.vdurmont:semver4j:3.1.0'
+//  testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+//  testImplementation 'org.hamcrest:hamcrest-core:2.2'
+  implementation brazilGradle.build()
+  testImplementation brazilGradle.testbuild()
 
   compileOnly brazilGradle.tool('Lombok')
   annotationProcessor brazilGradle.tool('Lombok')

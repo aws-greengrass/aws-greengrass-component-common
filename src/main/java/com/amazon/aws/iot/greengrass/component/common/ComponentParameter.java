@@ -14,7 +14,7 @@ public class ComponentParameter {
     @NonNull
     String name;
 
-    String defaultValue;
+    String value;
 
     @NonNull
     ParameterType type;

@@ -1,6 +1,5 @@
 package com.amazon.aws.iot.greengrass.component.common;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum ComponentType {

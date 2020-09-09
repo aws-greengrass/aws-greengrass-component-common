@@ -16,12 +16,12 @@ public class DependencyProperties {
     @NonNull
     Requirement versionRequirement;
 
-    String dependencyType;
+    DependencyType dependencyType;
 
     @Builder
-    public DependencyProperties(@NonNull String versionRequirement, String dependencyType) {
+    public DependencyProperties(@NonNull String versionRequirement, DependencyType dependencyType) {
         this.versionRequirement = Requirement.buildNPM(versionRequirement);
-        this.dependencyType = dependencyType == null ? "HARD": dependencyType;
+        this.dependencyType = dependencyType == null ? DependencyType.HARD : dependencyType;
     }
 
     @JsonPOJOBuilder(withPrefix = "")

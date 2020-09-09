@@ -14,7 +14,7 @@
       "Parameters": [
         {
           "Name": "TestParam",
-          "DefaultValue": "TestValue",
+          "Value": "TestValue",
           "Type": "STRING"
         }
       ],

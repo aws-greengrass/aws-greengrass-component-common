@@ -1,6 +1,5 @@
 package com.amazon.aws.iot.greengrass.component.common;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -42,8 +41,4 @@ public class ComponentRecipe {
     public static class ComponentRecipeBuilder {
     }
 
-    public enum RecipeFormatVersion {
-        @JsonProperty("2020-01-25")
-        JAN_25_2020
-    }
 }

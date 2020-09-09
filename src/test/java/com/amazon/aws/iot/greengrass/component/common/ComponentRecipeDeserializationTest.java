@@ -82,7 +82,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .size(), Is.is(1));
         ComponentParameter testParam = parameters.get(0);
         assertThat(testParam.getName(), Is.is("TestParam"));
-        assertThat(testParam.getDefaultValue(), Is.is("TestValue"));
+        assertThat(testParam.getValue(), Is.is("TestValue"));
         assertThat(testParam.getType(), Is.is(ComponentParameter.ParameterType.STRING));
 
         assertThat(manifest.getArtifacts()
@@ -98,7 +98,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .size(), Is.is(2));
         assertThat(manifest.getDependencies(), IsMapContaining.hasEntry("BarService",
                 new DependencyProperties.DependencyPropertiesBuilder().versionRequirement("^1.1")
-                        .dependencyType("soft")
+                        .dependencyType(DependencyType.SOFT)
                         .build()));
         assertThat(manifest.getDependencies(), IsMapContaining.hasEntry("BazService",
                 new DependencyProperties.DependencyPropertiesBuilder().versionRequirement("^2.0")
