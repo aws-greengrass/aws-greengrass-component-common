@@ -17,22 +17,23 @@ import java.util.List;
 @Builder
 public class ComponentRecipe {
     @NonNull
-    RecipeTemplateVersion templateVersion;
+    RecipeFormatVersion recipeFormatVersion;
 
     @NonNull
     String componentName;
 
     @NonNull
     @JsonSerialize(using = SemverSerializer.class)
-    Semver version;
+    Semver componentVersion;
 
-    ComponentType componentType;
+    @Builder.Default
+    ComponentType componentType = ComponentType.GENERIC;
 
-    String description;
+    String componentDescription;
 
-    String publisher;
+    String componentPublisher;
 
-    String source;
+    String componentSource;
 
     @Builder.Default
     List<PlatformSpecificManifest> manifests = Collections.emptyList();
@@ -41,7 +42,7 @@ public class ComponentRecipe {
     public static class ComponentRecipeBuilder {
     }
 
-    public enum RecipeTemplateVersion {
+    public enum RecipeFormatVersion {
         @JsonProperty("2020-01-25")
         JAN_25_2020
     }

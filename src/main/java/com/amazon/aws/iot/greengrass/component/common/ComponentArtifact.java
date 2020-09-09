@@ -23,7 +23,8 @@ public class ComponentArtifact {
 
     String algorithm;
 
-    Unarchive unarchive;
+    @Builder.Default
+    Unarchive unarchive = Unarchive.NONE;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class ComponentArtifactBuilder {

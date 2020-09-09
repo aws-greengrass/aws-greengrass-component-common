@@ -14,7 +14,7 @@ public class SemverSerializer extends StdSerializer<Semver> {
 
     @Override
     public void serialize(final Semver value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
-        final String version = value.toString();
+        final String version = value.getValue();
         gen.writeString(version);
     }
 }

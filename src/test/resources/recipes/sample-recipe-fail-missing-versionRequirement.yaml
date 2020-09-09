@@ -1,10 +1,10 @@
 ---
-templateVersion: 2020-01-25
-componentName: FooService
-description: Test recipe for Evergreen packages
-publisher: Me
-version: '1.0.0'
-componentType: plugin
-manifests:
-  - dependencies:
+RecipeFormatVersion: 2020-01-25
+ComponentName: FooService
+ComponentDescription: Test recipe for Evergreen packages
+ComponentPublisher: Me
+ComponentVersion: '1.0.0'
+ComponentType: aws.greengrass.plugin
+Manifests:
+  - Dependencies:
       abc: {}

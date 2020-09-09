@@ -63,7 +63,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
 
     void verifyRecipeWithAllFields(final ComponentRecipe recipe) {
         assertThat(recipe.getComponentName(), Is.is("FooService"));
-        assertThat(recipe.getVersion()
+        assertThat(recipe.getComponentVersion()
                 .getValue(), Is.is("1.0.0"));
         assertThat(recipe.getComponentType(), Is.is(ComponentType.PLUGIN));
         assertThat(recipe.getManifests()
@@ -74,7 +74,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertEquals(Platform.Architecture.AMD64, manifest.getPlatform().getArchitecture());
         assertThat(manifest.getLifecycle()
                 .size(), Is.is(1));
-        assertThat(manifest.getLifecycle(), IsMapContaining.hasKey("install"));
+        assertThat(manifest.getLifecycle(), IsMapContaining.hasKey("Install"));
 
         // verify param
         List<ComponentParameter> parameters = manifest.getParameters();
@@ -109,7 +109,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertThat(manifest.getPlatform(), IsNull.nullValue());
         assertThat(manifest.getLifecycle()
                 .size(), Is.is(1));
-        assertThat(manifest.getLifecycle(), IsMapContaining.hasKey("start"));
+        assertThat(manifest.getLifecycle(), IsMapContaining.hasKey("Start"));
         assertThat(manifest.getArtifacts()
                 .size(), Is.is(1));
         artifact = manifest.getArtifacts()
@@ -149,7 +149,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
 
     void verifyWrapperComponentRecipe(final ComponentRecipe recipe) {
         assertThat(recipe.getComponentName(), Is.is("PythonRuntime"));
-        assertThat(recipe.getVersion()
+        assertThat(recipe.getComponentVersion()
                 .getValue(), Is.is("1.1.0"));
         assertThat(recipe.getManifests()
                 .size(), Is.is(1));
@@ -159,6 +159,6 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertEquals(Platform.Architecture.AMD64, manifest.getPlatform().getArchitecture());
         assertThat(manifest.getLifecycle()
                 .size(), Is.is(1));
-        assertThat(manifest.getLifecycle(), IsMapContaining.hasEntry("install", "apt-get install python3.7"));
+        assertThat(manifest.getLifecycle(), IsMapContaining.hasEntry("Install", "apt-get install python3.7"));
     }
 }

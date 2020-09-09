@@ -1,17 +1,17 @@
 {
-  "templateVersion": "2020-01-25",
-  "componentName": "PythonRuntime",
-  "description": "Test recipe for Evergreen packages",
-  "publisher": "Me",
-  "version": "1.1.0",
-  "manifests": [
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "PythonRuntime",
+  "ComponentDescription": "Test recipe for Evergreen packages",
+  "ComponentPublisher": "Me",
+  "ComponentVersion": "1.1.0",
+  "Manifests": [
     {
-      "platform": {
+      "Platform": {
         "os": "linux",
         "architecture": "amd64"
       },
-      "lifecycle": {
-        "install": "apt-get install python3.7"
+      "Lifecycle": {
+        "Install": "apt-get install python3.7"
       }
     }
   ]
