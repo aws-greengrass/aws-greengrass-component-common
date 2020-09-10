@@ -82,7 +82,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .size(), Is.is(1));
         ComponentParameter testParam = parameters.get(0);
         assertThat(testParam.getName(), Is.is("TestParam"));
-        assertThat(testParam.getValue(), Is.is("TestValue"));
+        assertThat(testParam.getDefaultValue(), Is.is("TestValue"));
         assertThat(testParam.getType(), Is.is(ComponentParameter.ParameterType.STRING));
 
         assertThat(manifest.getArtifacts()

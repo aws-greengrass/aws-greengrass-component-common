@@ -11,7 +11,7 @@ Manifests:
       architecture: amd64
     Parameters:
       - Name: TestParam
-        Value: 'TestValue'
+        DefaultValue: 'TestValue'
         Type: STRING
     Lifecycle:
       Install:
