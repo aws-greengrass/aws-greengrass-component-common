@@ -9,9 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Value;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 @JsonDeserialize(builder = Platform.PlatformBuilder.class)
 @Builder
 @Value
@@ -20,6 +17,7 @@ public class Platform {
 
     @Builder.Default
     OS os = OS.ALL;
+
     // String osVersion;
     @Builder.Default
     Architecture architecture = Architecture.ALL;
@@ -32,35 +30,15 @@ public class Platform {
      * Non customer-facing class. Keeps the OS hierarchy data.
      */
     @Getter
+    @AllArgsConstructor
     public enum OS {
-        ALL(null, ALL_KEYWORD),
-        WINDOWS(ALL, "windows"),
-        UNIX(ALL, "unix"),
-        LINUX(UNIX, "linux"),
-        FEDORA(LINUX, "fedora"),
-        DEBIAN(LINUX, "debian"),
-        UBUNTU(DEBIAN, "ubuntu"),
-        RASPBIAN(DEBIAN, "raspbian"),
-        DARWIN(UNIX, "darwin"),
-        MAC_OS(DARWIN, "macOS");
+        ALL(ALL_KEYWORD),
+        WINDOWS("windows"),
+        LINUX("linux"),
+        DARWIN("darwin");
 
         @JsonValue
         private final String name;
-        private final OS parent;
-        private final Collection<OS> children;
-        private final int rank;
-
-        OS(OS parent, String name) {
-            this.parent = parent;
-            this.name = name;
-            this.children = new HashSet<>();
-            if (parent == null) {
-                this.rank = 0;
-            } else {
-                this.rank = parent.getRank() + 1;
-                parent.getChildren().add(this);
-            }
-        }
 
         /**
          * get OS enum from string value. Ignore case.
@@ -76,7 +54,7 @@ public class Platform {
             }
 
             for (OS os : values()) {
-                if (os.getName().equalsIgnoreCase(value)) {
+                if (os.getName().equals(value)) {
                     return os;
                 }
             }
@@ -91,27 +69,12 @@ public class Platform {
     @Getter
     @AllArgsConstructor
     public enum Architecture {
-        ALL(null, ALL_KEYWORD),
-        AMD64(ALL, "amd64"),
-        ARM(ALL, "arm");
+        ALL(ALL_KEYWORD),
+        AMD64("amd64"),
+        ARM("arm");
 
         @JsonValue
         private final String name;
-        private final Architecture parent;
-        private final Collection<Architecture> children;
-        private final int rank;
-
-        Architecture(Architecture parent, String name) {
-            this.parent = parent;
-            this.name = name;
-            this.children = new HashSet<>();
-            if (parent == null) {
-                this.rank = 0;
-            } else {
-                this.rank = parent.getRank() + 1;
-                parent.getChildren().add(this);
-            }
-        }
 
         /**
          * get Architecture enum from string value. Ignore case.
@@ -127,7 +90,7 @@ public class Platform {
             }
 
             for (Architecture arch : values()) {
-                if (arch.getName().equalsIgnoreCase(value)) {
+                if (arch.getName().equals(value)) {
                     return arch;
                 }
             }

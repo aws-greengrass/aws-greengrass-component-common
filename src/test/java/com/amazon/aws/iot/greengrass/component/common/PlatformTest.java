@@ -18,11 +18,11 @@ public class PlatformTest {
     @Test
     public void testSerialize() throws Exception {
         Platform platform = Platform.builder()
-                .os(OS.UBUNTU)
+                .os(OS.LINUX)
                 .architecture(Architecture.AMD64)
                 .build();
 
-        String expected = "{\"os\":\"ubuntu\",\"architecture\":\"amd64\"}";
+        String expected = "{\"os\":\"linux\",\"architecture\":\"amd64\"}";
         String actual = OBJECT_MAPPER.writeValueAsString(platform);
         assertEquals(expected, actual);
     }
@@ -30,14 +30,14 @@ public class PlatformTest {
     @Test
     public void testDeserialize() throws Exception {
         // verify character case is ignored
-        String testInput = "{\"os\":\"UbUntu\", \"architecture\":\"amd64\"}";
+        String testInput = "{\"os\":\"linux\",\"architecture\":\"amd64\"}";
         Platform expected = Platform.builder()
-                .os(OS.UBUNTU)
+                .os(OS.LINUX)
                 .architecture(Architecture.AMD64).build();
         assertEquals(expected, OBJECT_MAPPER.readValue(testInput, Platform.class));
 
         // verify non-provided OS is by default ALL
-        testInput = "{\"architecture\":\"Amd64\"}";
+        testInput = "{\"architecture\":\"amd64\"}";
         expected = Platform.builder()
                 .os(OS.ALL)
                 .architecture(Architecture.AMD64).build();
@@ -51,16 +51,16 @@ public class PlatformTest {
         assertEquals(expected, OBJECT_MAPPER.readValue(testInput, Platform.class));
 
         // verify non-provided Arch is by default ALL
-        testInput = "{\"os\":\"ubuntu\"}";
+        testInput = "{\"os\":\"linux\"}";
         expected = Platform.builder()
-                .os(OS.UBUNTU)
+                .os(OS.LINUX)
                 .architecture(Architecture.ALL).build();
         assertEquals(expected, OBJECT_MAPPER.readValue(testInput, Platform.class));
 
         // verify "any" keyword in Arch
-        testInput = "{\"os\":\"Ubuntu\", \"architecture\":\"any\"}";
+        testInput = "{\"os\":\"linux\", \"architecture\":\"any\"}";
         expected = Platform.builder()
-                .os(OS.UBUNTU)
+                .os(OS.LINUX)
                 .architecture(Architecture.ALL).build();
         assertEquals(expected, OBJECT_MAPPER.readValue(testInput, Platform.class));
     }
