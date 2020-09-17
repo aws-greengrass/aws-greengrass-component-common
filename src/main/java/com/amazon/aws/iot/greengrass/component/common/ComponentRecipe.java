@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.vdurmont.semver4j.Semver;
+import java.util.Map;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
@@ -33,6 +34,9 @@ public class ComponentRecipe {
     String componentPublisher;
 
     String componentSource;
+
+    @Builder.Default
+    Map<String, DependencyProperties> componentDependencies = Collections.emptyMap();
 
     @Builder.Default
     List<PlatformSpecificManifest> manifests = Collections.emptyList();

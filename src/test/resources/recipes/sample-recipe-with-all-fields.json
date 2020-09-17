@@ -5,6 +5,15 @@
   "ComponentPublisher": "Me",
   "ComponentVersion": "1.0.0",
   "ComponentType": "aws.greengrass.plugin",
+  "ComponentDependencies": {
+    "BarService": {
+      "VersionRequirement": "^1.1",
+      "DependencyType": "soft"
+    },
+    "BazService": {
+      "VersionRequirement": "^2.0"
+    }
+  },
   "Manifests": [
     {
       "Platform": {

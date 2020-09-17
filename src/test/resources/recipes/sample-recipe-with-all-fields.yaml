@@ -5,6 +5,12 @@ ComponentDescription: Test recipe for Evergreen packages
 ComponentPublisher: Me
 ComponentVersion: '1.0.0'
 ComponentType: aws.greengrass.plugin
+ComponentDependencies:
+  BarService:
+    VersionRequirement: ^1.1
+    DependencyType: soft
+  BazService:
+    VersionRequirement: ^2.0
 Manifests:
   - Platform:
       os: windows
@@ -22,7 +28,7 @@ Manifests:
         Digest: d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f
         Algorithm: SHA-256
         Unarchive: ZIP
-      - Uri: s3//some-bucket/hello-world2.py
+      - URI: s3//some-bucket/hello-world2.py
         Digest: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
         Algorithm: SHA-256
     Dependencies:

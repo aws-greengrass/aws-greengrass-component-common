@@ -66,6 +66,15 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertThat(recipe.getComponentVersion()
                 .getValue(), Is.is("1.0.0"));
         assertThat(recipe.getComponentType(), Is.is(ComponentType.PLUGIN));
+
+        assertThat(recipe.getComponentDependencies(), IsMapContaining.hasEntry("BarService",
+                new DependencyProperties.DependencyPropertiesBuilder().versionRequirement("^1.1")
+                        .dependencyType(DependencyType.SOFT)
+                        .build()));
+        assertThat(recipe.getComponentDependencies(), IsMapContaining.hasEntry("BazService",
+                new DependencyProperties.DependencyPropertiesBuilder().versionRequirement("^2.0")
+                        .build()));
+
         assertThat(recipe.getManifests()
                 .size(), Is.is(2));
         PlatformSpecificManifest manifest = recipe.getManifests()
