@@ -89,11 +89,16 @@ repositories {
  Resolve build and test dependencies using BrazilGradle.
 */
 dependencies {
+  // Uncomment the following before running `bb publish` so that maven takes dependency from maven central instead of brazil
+
 //  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.1'
 //  implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
 //  implementation 'com.vdurmont:semver4j:3.1.0'
 //  testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
 //  testImplementation 'org.hamcrest:hamcrest-core:2.2'
+
+  // Comment out the following before running `bb publish`. Otherwise, it tries to find dependency from Brazil and
+  // fails at device side because device side can't access Brazil.
   implementation brazilGradle.build()
   testImplementation brazilGradle.testbuild()
 

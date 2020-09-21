@@ -1,9 +1,19 @@
 # Component Recipe Reference
-## Reference and guidelines
-This reference describes version 2020-xx-xx of component recipe file format.
+Component Recipe is a single YAML or JSON file for the component author to define component deployment and runtime
+characteristics in the AWS Greengrass ecosystem.
+ 
+## Reference last updated date: 2020.09.21
+The date is here for easier reference. Look at git commit time for the accurate timestamp instead.
 
-Component recipe is a single yaml/json file for the component author to define component deployment and runtime
- characteristics in the AWS Greengrass ecosystem.
+## Guidelines
+### Unknown or unrecognized Property
+1. Currently, unknown properties will not be parsed so that it gives team members clear message if a field is mis-spelled, etc.
+
+### Backward compatibility for the version 2020-01-25
+1. Property names are case-insensitive. Please use Pascal case if possible. See below.
+2. Enum names are case-insensitive.
+3. New fields like "ComponentDependencies" will not break existing recipe parsing.
+
 ## Recipe file structure and examples
 Here is a sample recipe file in yaml format which defines a simple HelloWorld application can run on AWS Greengrass
  managed devices. It defines a manifest for x86_64 windows as well as a manifest for arm32 linux.
@@ -104,6 +114,10 @@ Describe component runtime mode, support values: `aws.greengrass.plugin`, `aws.g
 ```yaml
 ComponentType: aws.greengrass.generic
 ```
+
+### Component Dependencies
+Don't use!!! Under active development...
+
 ### Manifests
 Define a list of manifests, a manifest is specific to one platform or default to every other platform.
 #### Manifest.Platform
