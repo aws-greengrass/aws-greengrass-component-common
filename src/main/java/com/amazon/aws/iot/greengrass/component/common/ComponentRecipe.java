@@ -35,6 +35,8 @@ public class ComponentRecipe {
 
     String componentSource;
 
+    ComponentConfiguration componentConfiguration;
+
     Map<String, DependencyProperties> componentDependencies;
 
     @Builder.Default

@@ -28,6 +28,14 @@ ComponentVersion: 1.0.0
 ComponentDescription: hello world from greengrass!
 ComponentPublisher: Amazon
 ComponentType: aws.greengrass.generic
+ComponentConfiguration:
+  Schema:
+    URI: s3://some-bucket/configuration-schema.json
+  DefaultValue: # object: the default configuration
+    FirstItem:
+      message: 'hello'
+    SecondItem:
+      message: 'goodbye'
 Manifests:
   - Platform:
       os: windows
@@ -114,6 +122,24 @@ Describe component runtime mode, support values: `aws.greengrass.plugin`, `aws.g
 ```yaml
 ComponentType: aws.greengrass.generic
 ```
+
+### Component Configuration
+Describe the configuration of the component
+
+```yaml
+ComponentConfiguration:
+  DefaultConfiguration:
+    FirstItem:
+      message: 'hello'
+    SecondItem:
+      message: 'goodbye'
+```
+
+#### ComponentConfiguration.DefaultConfiguration
+
+An optional default configuration that takes effect when the component is first deployed. If an operator resets any
+configuration key, the value of that key and any sub-keys will be reset to the default value specified here. The
+component should operate normally using only this set of default values.
 
 ### Component Dependencies
 Don't use!!! Under active development...

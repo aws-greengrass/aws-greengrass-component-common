@@ -11,6 +11,12 @@ ComponentDependencies:
     DependencyType: soft
   BazService:
     VersionRequirement: ^2.0
+ComponentConfiguration:
+  DefaultConfiguration:
+    FirstItem:
+      message: 'hello'
+    SecondItem:
+      message: 'goodbye'
 Manifests:
   - Platform:
       os: windows

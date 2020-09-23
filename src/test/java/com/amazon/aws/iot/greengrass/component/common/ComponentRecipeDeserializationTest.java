@@ -1,14 +1,23 @@
 package com.amazon.aws.iot.greengrass.component.common;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.collection.IsMapContaining;
 import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+
+import lombok.Data;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -136,6 +145,32 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertThat(manifest.getDependencies(), IsMapContaining.hasEntry("BazService",
                 new DependencyProperties.DependencyPropertiesBuilder().versionRequirement("^2.0")
                         .build()));
+
+        // Accessing configuration using JsonPointer
+        assertThat(recipe.getComponentConfiguration().getDefaultConfiguration().
+                at("/FirstItem/message").textValue(), Is.is("hello"));
+
+        // Accessing configuration using an object mapper
+        try {
+            ObjectMapper objectMapper =
+                    new ObjectMapper(new JsonFactory())
+                            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+                            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
+                            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                            .findAndRegisterModules();
+            _Configuration modeledConfig = objectMapper.treeToValue(recipe.getComponentConfiguration().getDefaultConfiguration(), _Configuration.class);
+            assertThat(modeledConfig.get("FirstItem").message, Is.is("hello"));
+        } catch (JsonProcessingException e) {
+            Assertions.fail(e);
+        }
+    }
+
+    @Data
+    private static class _ConfigurationItem {
+        String message;
+    }
+
+    private static class _Configuration extends HashMap<String, _ConfigurationItem> {
     }
 
     @Test

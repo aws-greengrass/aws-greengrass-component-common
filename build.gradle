@@ -104,6 +104,8 @@ dependencies {
 
   compileOnly brazilGradle.tool('Lombok')
   annotationProcessor brazilGradle.tool('Lombok')
+  testCompileOnly brazilGradle.tool('Lombok') // If you need Lombok in unit tests
+  testAnnotationProcessor brazilGradle.tool('Lombok') // If you need Lombok in unit tests
 }
 
 /*
