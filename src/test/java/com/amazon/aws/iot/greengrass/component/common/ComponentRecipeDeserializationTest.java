@@ -88,11 +88,15 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         // verify param
         List<ComponentParameter> parameters = manifest.getParameters();
         assertThat(parameters
-                .size(), Is.is(1));
+                .size(), Is.is(2));
         ComponentParameter testParam = parameters.get(0);
         assertThat(testParam.getName(), Is.is("TestParam"));
         assertThat(testParam.getValue(), Is.is("TestValue"));
         assertThat(testParam.getType(), Is.is(ComponentParameter.ParameterType.STRING));
+        ComponentParameter testParamEmpty = parameters.get(1);
+        assertThat(testParamEmpty.getName(), Is.is("TestParamEmpty"));
+        assertThat(testParamEmpty.getValue(), Is.is(""));
+        assertThat(testParamEmpty.getType(), Is.is(ComponentParameter.ParameterType.STRING));
 
         assertThat(manifest.getArtifacts()
                 .size(), Is.is(2));

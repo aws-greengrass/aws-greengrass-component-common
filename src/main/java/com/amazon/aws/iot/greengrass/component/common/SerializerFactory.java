@@ -11,13 +11,13 @@ public class SerializerFactory {
             new ObjectMapper(new YAMLFactory())
                     .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
                     .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
-                    .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+                    .setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     private static final ObjectMapper JSON_RECIPE_SERIALIZER =
             new ObjectMapper(new JsonFactory())
                     .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
                     .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
-                    .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
+                    .setSerializationInclusion(JsonInclude.Include.NON_NULL)
                     .findAndRegisterModules();
 
     public static ObjectMapper getRecipeSerializer() {

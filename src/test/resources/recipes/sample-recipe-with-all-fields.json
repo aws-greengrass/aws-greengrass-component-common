@@ -25,6 +25,11 @@
           "Name": "TestParam",
           "Value": "TestValue",
           "Type": "STRING"
+        },
+        {
+          "Name": "TestParamEmpty",
+          "Value": "",
+          "Type": "STRING"
         }
       ],
       "Lifecycle": {

@@ -35,8 +35,7 @@ public class ComponentRecipe {
 
     String componentSource;
 
-    @Builder.Default
-    Map<String, DependencyProperties> componentDependencies = Collections.emptyMap();
+    Map<String, DependencyProperties> componentDependencies;
 
     @Builder.Default
     List<PlatformSpecificManifest> manifests = Collections.emptyList();
