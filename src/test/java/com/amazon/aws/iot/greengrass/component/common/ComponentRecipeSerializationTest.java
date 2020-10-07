@@ -15,7 +15,7 @@ class ComponentRecipeSerializationTest extends BaseRecipeTest {
     void GIVEN_the_b1_recipe_file_yaml_WHEN_we_deserialize_and_serialize_it_THEN_no_empty_fields_are_added()
             throws IOException {
         String filename = "b1-recipe-with-all-fields.yaml";
-        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+        Path recipePath = getResourcePath(filename);
 
         String recipeString = new String(Files.readAllBytes(recipePath));
         ComponentRecipe recipe = DESERIALIZER_YAML.readValue(recipeString, ComponentRecipe.class);
@@ -38,7 +38,7 @@ class ComponentRecipeSerializationTest extends BaseRecipeTest {
     void GIVEN_a_recipe_file_yaml_WHEN_we_deserialize_it_and_serialize_it_back_THEN_we_get_the_same_thing()
             throws IOException {
         String filename = "sample-recipe-with-all-fields.yaml";
-        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+        Path recipePath = getResourcePath(filename);
 
         String recipeString = new String(Files.readAllBytes(recipePath));
         ComponentRecipe recipe = DESERIALIZER_YAML.readValue(recipeString, ComponentRecipe.class);
@@ -51,7 +51,7 @@ class ComponentRecipeSerializationTest extends BaseRecipeTest {
     void GIVEN_a_recipe_file_json_WHEN_we_deserialize_it_and_serialize_it_back_THEN_we_get_the_same_thing()
             throws IOException {
         String filename = "sample-recipe-with-all-fields.json";
-        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+        Path recipePath = getResourcePath(filename);
 
         String recipeString = new String(Files.readAllBytes(recipePath));
         ComponentRecipe recipe = DESERIALIZER_JSON.readValue(recipeString, ComponentRecipe.class);

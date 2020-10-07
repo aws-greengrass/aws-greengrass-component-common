@@ -29,8 +29,6 @@ ComponentDescription: hello world from greengrass!
 ComponentPublisher: Amazon
 ComponentType: aws.greengrass.generic
 ComponentConfiguration:
-  Schema:
-    URI: s3://some-bucket/configuration-schema.json
   DefaultValue: # object: the default configuration
     FirstItem:
       message: 'hello'

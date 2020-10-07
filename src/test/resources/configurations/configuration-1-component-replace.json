@@ -1,0 +1,39 @@
+{
+  "components": {
+    "MyThermostatComponent": {
+      "version": "1.0.0",
+      "configurationUpdate": {
+        "MERGE": {
+          "units": "C",
+          "rooms": {
+            "Kitchen": {
+              "temperature": 25,
+              "fan": "on"
+            },
+            "Office": {
+              "temperature": 22,
+              "fan": "auto"
+            },
+            "Conference Room": {
+              "temperature": 20,
+              "fan": "auto"
+            }
+          }
+        },
+        "RESET": [
+          "/rooms/Kitchen",
+          "/rooms/Office",
+          "/rooms/Conference Room"
+        ]
+      }
+    }
+  },
+  "failureHandlingPolicy": "DO_NOTHING",
+  "componentUpdatePolicy": {
+    "timeout": "5000",
+    "action": "SKIP_NOTIFY_COMPONENTS"
+  },
+  "configurationValidationPolicy": {
+    "timeout": "30000"
+  }
+}

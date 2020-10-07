@@ -29,7 +29,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
     @Test
     void GIVEN_recipe_with_all_possible_fields_yaml_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
         String filename = "sample-recipe-with-all-fields.yaml";
-        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+        Path recipePath = getResourcePath(filename);
 
         ComponentRecipe recipe = DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
                 ComponentRecipe.class);
@@ -40,7 +40,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
     @Test
     void GIVEN_recipe_with_missing_required_field_uri_yaml_WHEN_attempt_to_deserialize_THEN_throws_exception() {
         String filename = "sample-recipe-fail-missing-uri.yaml";
-        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+        Path recipePath = getResourcePath(filename);
 
         IOException ex = assertThrows(IOException.class,
                 () -> DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
@@ -51,7 +51,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
     @Test
     void GIVEN_recipe_with_missing_required_field_versionRequirement_yaml_WHEN_attempt_to_deserialize_THEN_throws_exception() {
         String filename = "sample-recipe-fail-missing-versionRequirement.yaml";
-        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+        Path recipePath = getResourcePath(filename);
 
         IOException ex = assertThrows(IOException.class,
                 () -> DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
@@ -62,7 +62,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
     @Test
     void GIVEN_recipe_with_all_possible_fields_json_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
         String filename = "sample-recipe-with-all-fields.json";
-        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+        Path recipePath = getResourcePath(filename);
 
         ComponentRecipe recipe = DESERIALIZER_JSON.readValue(new String(Files.readAllBytes(recipePath)),
                 ComponentRecipe.class);
@@ -176,7 +176,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
     @Test
     void GIVEN_a_wrapper_component_recipe_yaml_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
         String filename = "wrapper-component-recipe.yaml";
-        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+        Path recipePath = getResourcePath(filename);
 
         ComponentRecipe recipe = DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
                 ComponentRecipe.class);
@@ -187,7 +187,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
     @Test
     void GIVEN_a_wrapper_component_recipe_json_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
         String filename = "wrapper-component-recipe.json";
-        Path recipePath = SAMPLE_RECIPES_PATH.resolve(filename);
+        Path recipePath = getResourcePath(filename);
 
         ComponentRecipe recipe = DESERIALIZER_JSON.readValue(new String(Files.readAllBytes(recipePath)),
                 ComponentRecipe.class);
