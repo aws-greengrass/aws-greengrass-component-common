@@ -64,4 +64,19 @@ public class PlatformTest {
                 .architecture(Architecture.ALL).build();
         assertEquals(expected, OBJECT_MAPPER.readValue(testInput, Platform.class));
     }
+
+    @Test
+    public void testDeserializeInvalidValue() throws Exception {
+        String testInput = "{\"os\":\"foo\",\"architecture\":\"amd64\"}";
+        Platform expected = Platform.builder()
+                .os(OS.UNKNOWN)
+                .architecture(Architecture.AMD64).build();
+        assertEquals(expected, OBJECT_MAPPER.readValue(testInput, Platform.class));
+
+        String testInput2 = "{\"os\":\"linux\",\"architecture\":\"bar\"}";
+        expected = Platform.builder()
+                .os(OS.LINUX)
+                .architecture(Architecture.UNKNOWN).build();
+        assertEquals(expected, OBJECT_MAPPER.readValue(testInput2, Platform.class));
+    }
 }

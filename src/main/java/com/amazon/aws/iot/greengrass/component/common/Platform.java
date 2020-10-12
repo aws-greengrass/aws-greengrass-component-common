@@ -18,7 +18,6 @@ public class Platform {
     @Builder.Default
     OS os = OS.ALL;
 
-    // String osVersion;
     @Builder.Default
     Architecture architecture = Architecture.ALL;
 
@@ -35,7 +34,8 @@ public class Platform {
         ALL(ALL_KEYWORD),
         WINDOWS("windows"),
         LINUX("linux"),
-        DARWIN("darwin");
+        DARWIN("darwin"),
+        UNKNOWN("unknown");
 
         @JsonValue
         private final String name;
@@ -49,7 +49,7 @@ public class Platform {
         @JsonCreator
         public static OS getOS(String value) {
             // "any" and "all" keyword are both accepted in recipe.
-            if ("any".equalsIgnoreCase(value)) {
+            if (value == null || "any".equalsIgnoreCase(value) || "all".equalsIgnoreCase(value)) {
                 return OS.ALL;
             }
 
@@ -58,8 +58,8 @@ public class Platform {
                     return os;
                 }
             }
-            // TODO: throw exception of unrecognized OS
-            return OS.ALL;
+
+            return OS.UNKNOWN;
         }
     }
 
@@ -71,7 +71,8 @@ public class Platform {
     public enum Architecture {
         ALL(ALL_KEYWORD),
         AMD64("amd64"),
-        ARM("arm");
+        ARM("arm"),
+        UNKNOWN("unknown");
 
         @JsonValue
         private final String name;
@@ -84,7 +85,7 @@ public class Platform {
          */
         @JsonCreator
         public static Architecture getArch(String value) {
-            if ("any".equalsIgnoreCase(value)) {
+            if (value == null || "any".equalsIgnoreCase(value) || "all".equalsIgnoreCase(value)) {
                 // "any" and "all" keyword are both accepted in recipe.
                 return Architecture.ALL;
             }
@@ -94,8 +95,7 @@ public class Platform {
                     return arch;
                 }
             }
-            // TODO: throw exception
-            return Architecture.ALL;
+            return Architecture.UNKNOWN;
         }
     }
 }
