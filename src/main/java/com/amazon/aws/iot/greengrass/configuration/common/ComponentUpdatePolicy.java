@@ -1,6 +1,7 @@
 package com.amazon.aws.iot.greengrass.configuration.common;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @JsonSerialize
-@JsonDeserialize
+@JsonDeserialize(builder = ComponentUpdatePolicy.ComponentUpdatePolicyBuilder.class)
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComponentUpdatePolicy {
@@ -24,5 +25,9 @@ public class ComponentUpdatePolicy {
         public static Action fromString(String s) {
             return Action.valueOf(s.toUpperCase());
         }
+    }
+
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class ComponentUpdatePolicyBuilder {
     }
 }

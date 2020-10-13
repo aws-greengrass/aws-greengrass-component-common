@@ -1,6 +1,7 @@
 package com.amazon.aws.iot.greengrass.configuration.common;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,8 +17,12 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize
-@JsonDeserialize
+@JsonDeserialize(builder = Configuration.ConfigurationBuilder.class)
 public class Configuration {
+
+    private String deploymentId;
+
+    private String deploymentName;
 
     private Long creationTimestamp;
 
@@ -30,4 +35,8 @@ public class Configuration {
     private ComponentUpdatePolicy componentUpdatePolicy;
 
     private ConfigurationValidationPolicy configurationValidationPolicy;
+
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class ConfigurationBuilder {
+    }
 }
