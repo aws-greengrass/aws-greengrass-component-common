@@ -35,6 +35,11 @@ public class Platform {
         WINDOWS("windows"),
         LINUX("linux"),
         DARWIN("darwin"),
+
+        @Deprecated
+        // deprecated. Keep this only for console test purpose.
+        MACOS("macos"),
+
         UNKNOWN("unknown");
 
         @JsonValue
@@ -59,6 +64,8 @@ public class Platform {
                 }
             }
 
+            // return UNKNOWN instead of throw exception. This is to keep backwards compatibility when
+            // cloud recipe has more supported platform than local.
             return OS.UNKNOWN;
         }
     }
