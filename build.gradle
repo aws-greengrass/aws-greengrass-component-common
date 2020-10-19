@@ -1,0 +1,137 @@
+// Applies BrazilGradle plugin then uses it to setup the build script classpath.
+buildscript {
+  apply plugin: 'brazil-gradle'
+  dependencies {
+    classpath brazilGradle.tool('BrazilGradleQualityDefaults')
+  }
+}
+
+/*
+ Applies core Gradle plugins, which are ones built into Gradle itself.
+*/
+plugins {
+  // Java for compile and unit test of Java source files. Read more at:
+  // https://docs.gradle.org/current/userguide/java_plugin.html
+  id 'java'
+
+  // Checkstyle for style checks and reports on Java source files. Read more at:
+  // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
+  id 'checkstyle'
+
+  // JaCoCo for coverage metrics and reports of Java source files. Read more at:
+  // https://docs.gradle.org/current/userguide/jacoco_plugin.html
+  id 'jacoco'
+
+  id 'maven-publish'
+}
+
+/*
+ Applies community Gradle plugins, usually added as build-tools in Config.
+*/
+
+// BrazilGradleQualityDefaults for enabling brazil specific quality rules and
+// reports for other quality plugins. Read more at:
+// https://w.amazon.com/bin/view/BrazilGradle/QualityDefaults
+apply plugin: 'brazil-quality-defaults'
+
+// SpotBugs for quality checks and reports of source files. Read more at:
+// https://spotbugs.readthedocs.io/en/stable/gradle.html
+apply plugin: 'com.github.spotbugs'
+
+/*
+ Java plugin default project layout is 'src/main/java' and 'src/test/java'.
+ Uncomment below if you instead want to use 'src' and 'tst'.
+
+sourceSets.main.java.srcDirs = ['src']
+sourceSets.test.java.srcDirs = ['tst']
+*/
+
+/*
+ Configures the Checkstyle "checkstyle" plugin. Remove this and the plugin if
+ you want to skip these checks and report generation.
+*/
+checkstyle {
+  sourceSets = [sourceSets.main]
+  ignoreFailures = true //disable for now because it's not working on delombok source, looking how to let checkstyle work with lombok.
+}
+
+/*
+ Configures the JaCoCo "jacoco" plugin. Remove this if you want to skip
+ these checks and report generation.
+
+ Set minimum code coverage to fail build, where 0.01 = 1%.
+*/
+check.dependsOn jacocoTestCoverageVerification
+jacocoTestCoverageVerification {
+  violationRules {
+    rule {
+      limit {
+        minimum = 0.01
+      }
+    }
+  }
+}
+
+/*
+ Configures the SpotBugs "com.github.spotbugs" plugin. Remove this and the
+ plugin to skip these checks and report generation.
+*/
+spotbugs {
+  sourceSets = [sourceSets.main]
+  ignoreFailures = false
+}
+
+repositories {
+  mavenCentral()
+}
+
+/*
+ Resolve build and test dependencies using BrazilGradle.
+*/
+dependencies {
+  // Uncomment the following before running `bb publish` so that maven takes dependency from maven central instead of brazil
+
+//  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.1'
+//  implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
+//  implementation 'com.vdurmont:semver4j:3.1.0'
+//  testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+//  testImplementation 'org.hamcrest:hamcrest-core:2.2'
+
+  // Comment out the following before running `bb publish`. Otherwise, it tries to find dependency from Brazil and
+  // fails at device side because device side can't access Brazil.
+  implementation brazilGradle.build()
+  testImplementation brazilGradle.testbuild()
+
+  compileOnly brazilGradle.tool('Lombok')
+  annotationProcessor brazilGradle.tool('Lombok')
+  testCompileOnly brazilGradle.tool('Lombok') // If you need Lombok in unit tests
+  testAnnotationProcessor brazilGradle.tool('Lombok') // If you need Lombok in unit tests
+}
+
+/*
+ Specifies that JUnit Platform (a.k.a. JUnit 5) should be used to execute tests.
+
+ For mixed JUnit 4 and 5 tests, add 'JUnit-4-12-migration = 5.x;' to
+ test-dependencies in Config.
+*/
+test {
+  useJUnitPlatform()
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId = 'com.aws.iot'
+      artifactId = 'component-common'
+      version = '0.0.0-SNAPSHOT'
+      from components.java
+    }
+  }
+  repositories {
+    maven {
+      url 's3://eg-component-share-lib'
+      authentication { awsIm(AwsImAuthentication) }
+    }
+  }
+}
+

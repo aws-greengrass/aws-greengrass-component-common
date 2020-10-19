@@ -1,17 +1,4 @@
-## My Project
-
-TODO: Fill this README out!
-
-Be sure to:
-
-* Change the title in this README
-* Edit your repository description on GitHub
-
-## Security
-
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
-
-## License
-
-This project is licensed under the Apache-2.0 License.
-
+# Common library to handle GreenGrass recipe files
+This incarnation has been made open-source-safe, with the appropriate license headers:
+    /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+     * SPDX-License-Identifier: Apache-2.0 */
