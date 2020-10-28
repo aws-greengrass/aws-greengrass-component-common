@@ -24,6 +24,8 @@ public class Configuration {
 
     private String deploymentName;
 
+    private String configurationArn;
+
     private Long creationTimestamp;
 
     @NonNull
