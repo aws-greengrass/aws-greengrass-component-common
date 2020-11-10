@@ -17,11 +17,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.Data;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -110,11 +117,18 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .size(), Is.is(2));
         PlatformSpecificManifest manifest = recipe.getManifests()
                 .get(0);
-        assertEquals(Platform.OS.WINDOWS, manifest.getPlatform().getOs());
-        assertEquals(Platform.Architecture.AMD64, manifest.getPlatform().getArchitecture());
+        assertEquals("windows", manifest.getPlatform().get("os"));
+        assertEquals("amd64", manifest.getPlatform().get("architecture"));
+        assertEquals("/list|of|options/", manifest.getPlatform().get("random"));
         assertThat(manifest.getLifecycle()
-                .size(), Is.is(1));
-        assertThat(manifest.getLifecycle(), IsMapContaining.hasKey("Install"));
+                .size(), Is.is(0)); // deprecated
+        assertThat(manifest.getSelections(),
+                contains(
+                        equalTo("one"),
+                        equalTo("two"),
+                        equalTo("three"),
+                        equalTo("four")));
+        assertThat(manifest.getName(), equalTo("Platform 1"));
 
         // verify param
         List<ComponentParameter> parameters = manifest.getParameters();
@@ -154,8 +168,9 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .get(1);
         assertThat(manifest.getPlatform(), IsNull.nullValue());
         assertThat(manifest.getLifecycle()
-                .size(), Is.is(1));
-        assertThat(manifest.getLifecycle(), IsMapContaining.hasKey("Start"));
+                .size(), Is.is(0)); // deprecated
+        assertThat(manifest.getSelections(), IsNull.nullValue());
+        assertThat(manifest.getName(), IsNull.nullValue());
         assertThat(manifest.getArtifacts()
                 .size(), Is.is(1));
         artifact = manifest.getArtifacts()
@@ -172,6 +187,17 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertThat(manifest.getDependencies(), IsMapContaining.hasEntry("BazService",
                 new DependencyProperties.DependencyPropertiesBuilder().versionRequirement("^2.0")
                         .build()));
+
+        // Lifecycle has now moved back to recipe. It has a very fluid syntax
+        assertThat(recipe.getLifecycle(), allOf(
+                aMapWithSize(3),
+                hasKey(equalTo("one")),
+                hasKey(equalTo("two")),
+                hasKey(equalTo("any"))));
+        assertThat(recipe.getLifecycle().get("any"), instanceOf(Map.class));
+        assertThat((Map<String,Object>)recipe.getLifecycle().get("any"), allOf(
+                aMapWithSize(1),
+                hasKey(equalTo("Install"))));
 
         // Accessing configuration using JsonPointer
         assertThat(recipe.getComponentConfiguration().getDefaultConfiguration().
@@ -230,10 +256,12 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .size(), Is.is(1));
         PlatformSpecificManifest manifest = recipe.getManifests()
                 .get(0);
-        assertEquals(Platform.OS.LINUX, manifest.getPlatform().getOs());
-        assertEquals(Platform.Architecture.AMD64, manifest.getPlatform().getArchitecture());
+        assertEquals("linux", manifest.getPlatform().get("os"));
+        assertEquals("amd64", manifest.getPlatform().get("architecture"));
         assertThat(manifest.getLifecycle()
+                .size(), Is.is(0));
+        assertThat(recipe.getLifecycle()
                 .size(), Is.is(1));
-        assertThat(manifest.getLifecycle(), IsMapContaining.hasEntry("Install", "apt-get install python3.7"));
+        assertThat(recipe.getLifecycle(), IsMapContaining.hasEntry("Install", "apt-get install python3.7"));
     }
 }
