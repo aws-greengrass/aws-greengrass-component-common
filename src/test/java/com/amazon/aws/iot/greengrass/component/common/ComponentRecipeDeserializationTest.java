@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsMapContaining;
 import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
@@ -70,6 +71,27 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         verifyRecipeWithAllFields(recipe);
     }
 
+    @Test
+    void GIVEN_recipe_with_missing_permission_fields_yaml_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
+        String filename = "sample-recipe-missing-permission-fields.yaml";
+        Path recipePath = getResourcePath(filename);
+
+        ComponentRecipe recipe = DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
+                ComponentRecipe.class);
+
+        assertThat(recipe.getManifests(), Matchers.not(Matchers.empty()));
+
+        // only checking permissions here
+        recipe.getManifests().forEach(m -> {
+            assertThat(m.getArtifacts(), Matchers.not(Matchers.empty()));
+            m.getArtifacts().forEach(a -> {
+                assertThat(a.getPermission().getRead(), Is.is(PermissionType.OWNER));
+                assertThat(a.getPermission().getExecute(), Is.is(PermissionType.NONE));
+            });
+        });
+    }
+
+
     void verifyRecipeWithAllFields(final ComponentRecipe recipe) {
         assertThat(recipe.getComponentName(), Is.is("FooService"));
         assertThat(recipe.getComponentVersion()
@@ -116,6 +138,8 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertThat(artifact.getDigest(), Is.is("d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f"));
         assertThat(artifact.getAlgorithm(), Is.is("SHA-256"));
         assertThat(artifact.getUnarchive(), Is.is(Unarchive.ZIP));
+        assertThat(artifact.getPermission().getRead(), Is.is(PermissionType.ALL));
+        assertThat(artifact.getPermission().getExecute(), Is.is(PermissionType.ALL));
         assertThat(manifest.getDependencies()
                 .size(), Is.is(2));
         assertThat(manifest.getDependencies(), IsMapContaining.hasEntry("BarService",
@@ -140,6 +164,9 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .toString(), Is.is("s3://some-bucket/hello_world.py"));
         assertThat(artifact.getDigest(), Is.is("d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f"));
         assertThat(artifact.getAlgorithm(), Is.is("SHA-256"));
+        assertThat(artifact.getPermission().getRead(), Is.is(PermissionType.ALL));
+        assertThat(artifact.getPermission().getExecute(), Is.is(PermissionType.ALL));
+
         assertThat(manifest.getDependencies()
                 .size(), Is.is(1));
         assertThat(manifest.getDependencies(), IsMapContaining.hasEntry("BazService",

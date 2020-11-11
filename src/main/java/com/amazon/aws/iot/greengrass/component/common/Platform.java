@@ -82,6 +82,8 @@ public class Platform {
         ALL(ALL_KEYWORD),
         AMD64("amd64"),
         ARM("arm"),
+        AARCH64("aarch64"),
+        X86("x86"),
         UNKNOWN("unknown");
 
         @JsonValue
