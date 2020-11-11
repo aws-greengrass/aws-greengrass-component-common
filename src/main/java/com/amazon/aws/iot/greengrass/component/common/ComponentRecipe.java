@@ -42,6 +42,9 @@ public class ComponentRecipe {
     @Builder.Default
     List<PlatformSpecificManifest> manifests = Collections.emptyList();
 
+    @Builder.Default
+    Map<String, Object> lifecycle = Collections.emptyMap();
+
     @JsonPOJOBuilder(withPrefix = "")
     public static class ComponentRecipeBuilder {
     }
