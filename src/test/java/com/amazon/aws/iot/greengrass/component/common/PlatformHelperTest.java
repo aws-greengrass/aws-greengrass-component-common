@@ -1,11 +1,13 @@
 package com.amazon.aws.iot.greengrass.component.common;
 
-import com.amazon.aws.iot.greengrass.component.common.Platform.Architecture;
-import com.amazon.aws.iot.greengrass.component.common.Platform.OS;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -16,33 +18,34 @@ public class PlatformHelperTest {
 
     @Test
     public void GIVEN_platform_WHEN_findBestMatch_THEN_correct_recipe_returned() throws Exception {
-        Platform platformToTest = Platform.builder()
-                .os(OS.LINUX)
-                .architecture(Architecture.AMD64)
-                .build();
+        Map<String,String> platformToTest = PlatformBuilder.of()
+                .os("linux")
+                .architecture("amd64")
+                .platform();
 
-        PlatformSpecificManifest recipeCandidate1 = createRecipeForPlatform(Platform.builder()
-                .os(OS.LINUX)
-                .architecture(Architecture.AMD64)
-                .build());
+        PlatformSpecificManifest recipeCandidate1 = PlatformBuilder.of()
+                .os("linux")
+                .architecture("amd64")
+                .manifest();
 
-        PlatformSpecificManifest recipeCandidate2 = createRecipeForPlatform(Platform.builder()
-                .architecture(Architecture.AMD64)
-                .os(OS.ALL)
-                .build());
+        PlatformSpecificManifest recipeCandidate2 = PlatformBuilder.of()
+                .architecture("amd64")
+                .os("//")
+                .manifest();
 
-        PlatformSpecificManifest recipeCandidate3 = createRecipeForPlatform(Platform.builder()
-                .architecture(Architecture.AMD64)
-                .build());
+        PlatformSpecificManifest recipeCandidate3 = PlatformBuilder.of()
+                .architecture("amd64")
+                .manifest();
 
-        PlatformSpecificManifest recipeCandidate4 = createRecipeForPlatform(null);
+        PlatformSpecificManifest recipeCandidate4 = PlatformSpecificManifest.builder()
+                .platform(null).build();
 
-        PlatformSpecificManifest recipeCandidate_notApplicable1 = createRecipeForPlatform(Platform.builder()
-                .os(OS.WINDOWS)
-                .build());
-        PlatformSpecificManifest recipeCandidate_notApplicable2 = createRecipeForPlatform(Platform.builder()
-                .architecture(Architecture.ARM)
-                .build());
+        PlatformSpecificManifest recipeCandidate_notApplicable1 = PlatformBuilder.of()
+                .os("windows")
+                .manifest();
+        PlatformSpecificManifest recipeCandidate_notApplicable2 = PlatformBuilder.of()
+                .architecture("something-else")
+                .manifest();
 
         Optional<PlatformSpecificManifest> result = PlatformHelper.findBestMatch(platformToTest, Arrays.asList(
                 recipeCandidate1,
@@ -83,10 +86,5 @@ public class PlatformHelperTest {
                 recipeCandidate_notApplicable2));
 
         assertFalse(result.isPresent());
-    }
-
-    private PlatformSpecificManifest createRecipeForPlatform(Platform platform) {
-        return PlatformSpecificManifest.builder()
-                .platform(platform).build();
     }
 }

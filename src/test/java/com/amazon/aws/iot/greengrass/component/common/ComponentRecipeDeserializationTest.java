@@ -110,8 +110,8 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .size(), Is.is(2));
         PlatformSpecificManifest manifest = recipe.getManifests()
                 .get(0);
-        assertEquals(Platform.OS.WINDOWS, manifest.getPlatform().getOs());
-        assertEquals(Platform.Architecture.AMD64, manifest.getPlatform().getArchitecture());
+        assertEquals("windows", manifest.getPlatform().get("os"));
+        assertEquals("amd64", manifest.getPlatform().get("architecture"));
         assertThat(manifest.getLifecycle()
                 .size(), Is.is(1));
         assertThat(manifest.getLifecycle(), IsMapContaining.hasKey("Install"));
@@ -230,8 +230,8 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .size(), Is.is(1));
         PlatformSpecificManifest manifest = recipe.getManifests()
                 .get(0);
-        assertEquals(Platform.OS.LINUX, manifest.getPlatform().getOs());
-        assertEquals(Platform.Architecture.AMD64, manifest.getPlatform().getArchitecture());
+        assertEquals("linux", manifest.getPlatform().get("os"));
+        assertEquals("amd64", manifest.getPlatform().get("architecture"));
         assertThat(manifest.getLifecycle()
                 .size(), Is.is(1));
         assertThat(manifest.getLifecycle(), IsMapContaining.hasEntry("Install", "apt-get install python3.7"));
