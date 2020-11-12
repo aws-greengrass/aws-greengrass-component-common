@@ -1,57 +1,78 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0 */
+
 package com.amazon.aws.iot.greengrass.component.common;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.Value;
 
-@JsonDeserialize(builder = Platform.PlatformBuilder.class)
-@Builder
-@Value
-public class Platform {
+import java.util.HashMap;
+import java.util.function.Function;
+
+/**
+ * <p>Class representing a Platform map. A platform map is a set of key/value pairs for matching against arbitrary keys.
+ * Some well defined keys do exist, but is irrelevant for Manifest data model.</p>
+ * <p>The value is a match expression, as follows:
+ *     <ul>
+ *         <li>name=stringValue - where stringValue beings with letter or digit - perform an exact match.</li>
+ *         <li>name=/regex/ - match string against regular expression.</li>
+ *         <li>name=[v1, v2, v3, ...] - provide alternatives (stringValue, regex, etc).</li>
+ *         <li>name=// - match string against anything, but must have a value ("must exist").</li>
+ *         <li>name=[] - match string against anything, but string need not have a value.</li>
+ *     </ul>
+ * </p>
+ */
+public class Platform extends HashMap<String,Object> {
+    // This is really a map
+    // Existing code assumes a Platform class with some methods, so this helps smooth the code migration process
+    @Deprecated
     public static final String ALL_KEYWORD = "all";
+    // Platform with no key/value pairs
+    public static final Platform EMPTY = new Platform();
 
-    @Builder.Default
-    OS os = OS.ALL;
+    @Deprecated
+    private <T extends Enum<T>> T getEnum(String name, Function<String, T> transform) {
+        Object o = get(name);
+        if (o instanceof String) {
+            return transform.apply((String)o);
+        } else {
+            return transform.apply(null);
+        }
+    }
 
-    @Builder.Default
-    Architecture architecture = Architecture.ALL;
+    // This is transitional
+    @Deprecated
+    public OS getOs() {
+        return getEnum("os", OS::getOS);
+    }
 
-    @JsonPOJOBuilder(withPrefix = "")
-    public static class PlatformBuilder {
+    // This is transitional
+    @Deprecated
+    public Architecture getArchitecture() {
+        return getEnum("architecture", Architecture::getArch);
     }
 
     /**
-     * Non customer-facing class. Keeps the OS hierarchy data.
+     * Backward compatibility only for transition: Set of OSes.
      */
     @Getter
     @AllArgsConstructor
+    @Deprecated
     public enum OS {
         ALL(ALL_KEYWORD),
         WINDOWS("windows"),
         LINUX("linux"),
         DARWIN("darwin"),
-
-        @Deprecated
-        // deprecated. Keep this only for console test purpose.
         MACOS("macos"),
-
         UNKNOWN("unknown");
 
-        @JsonValue
         private final String name;
 
         /**
-         * get OS enum from string value. Ignore case.
-         * Unrecognized values will map to OS.ALL
-         * @param value String of OS
-         * @return OS enum
+         * Backward compatibility only for transition: Convert string to enum value.
+         * @param value String value to convert
+         * @return enum value
          */
-        @JsonCreator
         public static OS getOS(String value) {
             // "any" and "all" keyword are both accepted in recipe.
             if (value == null || "any".equalsIgnoreCase(value) || "all".equalsIgnoreCase(value)) {
@@ -71,8 +92,9 @@ public class Platform {
     }
 
     /**
-     * Non customer-facing class. Currently only has name field.
+     * Backward compatibility only for transition: Set of Architectures.
      */
+    @Deprecated
     @Getter
     @AllArgsConstructor
     public enum Architecture {
@@ -83,16 +105,13 @@ public class Platform {
         X86("x86"),
         UNKNOWN("unknown");
 
-        @JsonValue
         private final String name;
 
         /**
-         * get Architecture enum from string value. Ignore case.
-         * Unrecognized values will map to Architecture.ALL
-         * @param value String of Architecture
-         * @return Architecture enum
+         * Backward compatibility only for transition: Convert string to enum value.
+         * @param value String value to convert
+         * @return enum value
          */
-        @JsonCreator
         public static Architecture getArch(String value) {
             if (value == null || "any".equalsIgnoreCase(value) || "all".equalsIgnoreCase(value)) {
                 // "any" and "all" keyword are both accepted in recipe.

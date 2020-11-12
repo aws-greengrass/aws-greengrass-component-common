@@ -1,5 +1,6 @@
 package com.amazon.aws.iot.greengrass.component.common;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Builder;
@@ -25,7 +26,8 @@ public class PlatformSpecificManifest {
      * A String beginning with any other symbol is reserved for future use.
      */
     @Builder.Default
-    Map<String,Object> platform = Collections.emptyMap();
+    @JsonProperty("platform")
+    Platform platform = Platform.EMPTY;
 
     @Builder.Default
     List<ComponentParameter> parameters = Collections.emptyList();
