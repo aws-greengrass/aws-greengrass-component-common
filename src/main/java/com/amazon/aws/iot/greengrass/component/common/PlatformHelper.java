@@ -48,7 +48,9 @@ public final class PlatformHelper {
             // If list, this is a list of alternatives
             // Note, [single] is allowed, which may be useful in future to allow [[something]] such as to allow
             // version range matches
-            return ((List<?>)template).stream().anyMatch(v -> testField(name, label, v));
+            // Also [] is allowed, meaning wild-card.
+            List<?> alternatives = (List<?>)template;
+            return alternatives.isEmpty() || alternatives.stream().anyMatch(v -> testField(name, label, v));
         } else {
             // If not a list, no alternatives.
             return testField(name, label, template);
@@ -96,7 +98,7 @@ public final class PlatformHelper {
             return true; // treat as wildcard
         }
         // Other special symbols may be implemented here, so we permit only simple labels for platform matching
-        if (!SIMPLE_LABEL.matcher(templateString).matches()) {
+        if (!SIMPLE_LABEL.matcher(templateString).lookingAt()) {
             // reject any special labels, to allow future extension
             // Review note, how to log?
             return false;

@@ -21,6 +21,10 @@ Manifests:
   - Platform:
       os: windows
       architecture: amd64
+      random:
+        - list
+        - of
+        - options
     Parameters:
       - Name: TestParam
         Value: 'TestValue'
@@ -28,10 +32,6 @@ Manifests:
       - Name: TestParamEmpty
         Value: ''
         Type: STRING
-    Lifecycle:
-      Install:
-        Skipif: onpath git
-        Script: sudo apt-get install git
     Artifacts:
       - URI: s3://some-bucket/hello_world.py
         Digest: d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f
@@ -52,11 +52,12 @@ Manifests:
         DependencyType: soft
       BazService:
         VersionRequirement: ^2.0
-  - Lifecycle:
-      Start:
-        Skipif: onpath git
-        Script: sudo apt-get install git
-    Artifacts:
+    Selections:
+      - one
+      - two
+      - three
+      - four
+  - Artifacts:
       - URI: s3://some-bucket/hello_world.py
         Digest: d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f
         Algorithm: SHA-256
@@ -66,3 +67,18 @@ Manifests:
     Dependencies:
       BazService:
         VersionRequirement: ^2.0
+Lifecycle:
+  one:
+    Install:
+      Skipif: onpath git
+      Script: sudo apt-get install git
+  two:
+    Install:
+      three:
+        Skipif: onpath git
+        Script: sudo apt-get install git
+  any:
+    Install:
+      Skipif:
+        four: onpath git
+      Script: sudo apt-get install git

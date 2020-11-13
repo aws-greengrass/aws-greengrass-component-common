@@ -26,8 +26,7 @@ public class PlatformSpecificManifest {
      * A String beginning with any other symbol is reserved for future use.
      */
     @Builder.Default
-    @JsonProperty("platform")
-    Platform platform = Platform.EMPTY;
+    Platform platform = null;
 
     @Builder.Default
     List<ComponentParameter> parameters = Collections.emptyList();

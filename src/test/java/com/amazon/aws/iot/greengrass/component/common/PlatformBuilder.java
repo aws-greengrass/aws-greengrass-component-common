@@ -9,34 +9,29 @@ import java.util.stream.Collectors;
  * For use by tests only
  */
 public class PlatformBuilder {
-    Map<String, Object> fields = new HashMap<>();
+    private Platform platform = new Platform();
 
     PlatformBuilder add(String field, Object value) {
-        fields.put(field, value);
+        platform.put(field, value);
         return this;
     }
 
-    PlatformBuilder os(Object value) {
-        return add("os", value);
+    PlatformBuilder os(Platform.OS value) {
+        return add("os", value.getName());
     }
 
-    PlatformBuilder architecture(Object value) {
-        return add("architecture", value);
+    PlatformBuilder architecture(Platform.Architecture value) {
+        return add("architecture", value.getName());
     }
 
-    Map<String, String> platform() {
-        return Collections.unmodifiableMap(fields.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(),
+    Map<String, String> reference() {
+        return Collections.unmodifiableMap(platform.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(),
                 e-> (String)e.getValue())));
-    }
-
-    Map<String, Object> platformMatch() {
-        return Collections.unmodifiableMap(fields.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(),
-                e-> e.getValue())));
     }
 
     PlatformSpecificManifest manifest() {
         return PlatformSpecificManifest.builder()
-                .platform(platformMatch()).build();
+                .platform(platform).build();
     }
 
     static PlatformBuilder of() {

@@ -15,22 +15,21 @@ import java.util.function.Function;
  * <p>The value is a match expression, as follows:
  *     <ul>
  *         <li>name=stringValue - where stringValue beings with letter or digit - perform an exact match.</li>
- *         <li>name=/regex/ - match string against regular expression.</li>
+ *         <li>name=/regex/ - match string against regular expression string.</li>
  *         <li>name=[v1, v2, v3, ...] - provide alternatives (stringValue, regex, etc).</li>
- *         <li>name=// - match string against anything, but must have a value ("must exist").</li>
+ *         <li>name="//" - match string against anything, but must have a value ("must exist").</li>
  *         <li>name=[] - match string against anything, but string need not have a value.</li>
  *     </ul>
- * </p>
  */
 public class Platform extends HashMap<String,Object> {
     // This is really a map
     // Existing code assumes a Platform class with some methods, so this helps smooth the code migration process
-    @Deprecated
+    //@Deprecated
     public static final String ALL_KEYWORD = "all";
     // Platform with no key/value pairs
     public static final Platform EMPTY = new Platform();
 
-    @Deprecated
+    //@Deprecated
     private <T extends Enum<T>> T getEnum(String name, Function<String, T> transform) {
         Object o = get(name);
         if (o instanceof String) {
@@ -41,13 +40,13 @@ public class Platform extends HashMap<String,Object> {
     }
 
     // This is transitional
-    @Deprecated
+    //@Deprecated
     public OS getOs() {
         return getEnum("os", OS::getOS);
     }
 
     // This is transitional
-    @Deprecated
+    //@Deprecated
     public Architecture getArchitecture() {
         return getEnum("architecture", Architecture::getArch);
     }
@@ -57,7 +56,7 @@ public class Platform extends HashMap<String,Object> {
      */
     @Getter
     @AllArgsConstructor
-    @Deprecated
+    //@Deprecated
     public enum OS {
         ALL(ALL_KEYWORD),
         WINDOWS("windows"),
@@ -94,9 +93,9 @@ public class Platform extends HashMap<String,Object> {
     /**
      * Backward compatibility only for transition: Set of Architectures.
      */
-    @Deprecated
     @Getter
     @AllArgsConstructor
+    //@Deprecated
     public enum Architecture {
         ALL(ALL_KEYWORD),
         AMD64("amd64"),
