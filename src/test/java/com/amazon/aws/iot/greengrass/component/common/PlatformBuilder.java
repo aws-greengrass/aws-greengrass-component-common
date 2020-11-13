@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class PlatformBuilder {
     private Platform platform = new Platform();
 
-    PlatformBuilder add(String field, Object value) {
+    PlatformBuilder add(String field, String value) {
         platform.put(field, value);
         return this;
     }
@@ -25,8 +25,7 @@ public class PlatformBuilder {
     }
 
     Map<String, String> reference() {
-        return Collections.unmodifiableMap(platform.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(),
-                e-> (String)e.getValue())));
+        return platform;
     }
 
     PlatformSpecificManifest manifest() {

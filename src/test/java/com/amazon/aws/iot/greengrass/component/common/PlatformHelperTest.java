@@ -29,7 +29,7 @@ public class PlatformHelperTest {
                 .manifest();
 
         PlatformSpecificManifest recipeCandidate2 = PlatformBuilder.of()
-                .add("os", "//")
+                .add("os", "*")
                 .add("architecture", "something")
                 .manifest();
 
@@ -89,50 +89,6 @@ public class PlatformHelperTest {
     }
 
     @Test
-    public void GIVEN_platform_WHEN_findBestMatch_as_set_THEN_correct_recipe_returned() throws Exception {
-        Map<String, String> platformToTest = PlatformBuilder.of()
-                .add("os", "other")
-                .add("architecture", "something")
-                .reference();
-
-        PlatformSpecificManifest recipeCandidateExact = PlatformBuilder.of()
-                .add("os", "other")
-                .add("architecture", "something")
-                .manifest();
-
-        PlatformSpecificManifest recipeCandidateSet = PlatformBuilder.of()
-                .add("os", Arrays.asList("one", "two", "other", "three"))
-                .add("architecture", "something")
-                .manifest();
-
-        PlatformSpecificManifest recipeNonCandidateSet = PlatformBuilder.of()
-                .add("os", Arrays.asList("one", "two", "three"))
-                .add("architecture", "something")
-                .manifest();
-
-        Optional<PlatformSpecificManifest> result = PlatformHelper.findBestMatch(platformToTest, Arrays.asList(
-                recipeNonCandidateSet,
-                recipeCandidateSet,
-                recipeCandidateExact));
-
-        assertTrue(result.isPresent());
-        assertEquals(recipeCandidateSet, result.get());
-
-        result = PlatformHelper.findBestMatch(platformToTest, Arrays.asList(
-                recipeNonCandidateSet,
-                recipeCandidateExact,
-                recipeCandidateSet));
-
-        assertTrue(result.isPresent());
-        assertEquals(recipeCandidateExact, result.get());
-
-        result = PlatformHelper.findBestMatch(platformToTest, Arrays.asList(
-                recipeNonCandidateSet));
-
-        assertFalse(result.isPresent());
-    }
-
-    @Test
     public void GIVEN_platform_WHEN_findBestMatch_as_regex_THEN_correct_recipe_returned() throws Exception {
         Map<String, String> platformToTest = PlatformBuilder.of()
                 .add("os", "other")
@@ -150,7 +106,7 @@ public class PlatformHelperTest {
                 .manifest();
 
         PlatformSpecificManifest recipeNonCandidateSet = PlatformBuilder.of()
-                .add("os", Arrays.asList("/^one|two|three$/"))
+                .add("os", "/^one|two|three$/")
                 .add("architecture", "something")
                 .manifest();
 
@@ -202,15 +158,9 @@ public class PlatformHelperTest {
                 .manifest();
 
         PlatformSpecificManifest recipeCandidateAny = PlatformBuilder.of()
-                .add("os", "//")
+                .add("os", "*")
                 .add("architecture", "something")
-                .add("another", "//")
-                .manifest();
-
-        PlatformSpecificManifest recipeCandidateOptional = PlatformBuilder.of()
-                .add("os", "//")
-                .add("architecture", "something")
-                .add("another", Arrays.asList())
+                .add("another", "*")
                 .manifest();
 
         Optional<PlatformSpecificManifest> result = PlatformHelper.findBestMatch(platformToTest, Arrays.asList(
@@ -225,26 +175,14 @@ public class PlatformHelperTest {
                 recipeCandidateMismatch,
                 recipeCandidateSubset,
                 recipeCandidateExact,
-                recipeCandidateAny,
-                recipeCandidateOptional));
+                recipeCandidateAny));
 
         assertTrue(result.isPresent());
         assertEquals(recipeCandidateSubset, result.get());
 
         result = PlatformHelper.findBestMatch(platformToTest, Arrays.asList(
                 recipeCandidateMismatch,
-                recipeCandidateOptional,
                 recipeCandidateAny,
-                recipeCandidateSubset,
-                recipeCandidateExact));
-
-        assertTrue(result.isPresent());
-        assertEquals(recipeCandidateOptional, result.get());
-
-        result = PlatformHelper.findBestMatch(platformToTest, Arrays.asList(
-                recipeCandidateMismatch,
-                recipeCandidateAny,
-                recipeCandidateOptional,
                 recipeCandidateSubset,
                 recipeCandidateExact));
 
@@ -271,42 +209,26 @@ public class PlatformHelperTest {
                 .manifest();
 
         PlatformSpecificManifest recipeCandidateAny = PlatformBuilder.of()
-                .add("os", "//")
+                .add("os", "*")
                 .add("architecture", "something")
-                .add("another", "//")
-                .manifest();
-
-        PlatformSpecificManifest recipeCandidateOptional = PlatformBuilder.of()
-                .add("os", "//")
-                .add("architecture", "something")
-                .add("another", Arrays.asList())
+                .add("another", "*")
                 .manifest();
 
         Optional<PlatformSpecificManifest> result = PlatformHelper.findBestMatch(platformToTest, Arrays.asList(
                 recipeCandidateMismatch,
                 recipeCandidateExact,
-                recipeCandidateOptional));
+                recipeCandidateAny));
 
         assertTrue(result.isPresent());
         assertEquals(recipeCandidateExact, result.get());
 
         result = PlatformHelper.findBestMatch(platformToTest, Arrays.asList(
                 recipeCandidateMismatch,
-                recipeCandidateAny,
-                recipeCandidateExact,
-                recipeCandidateOptional));
-
-        assertTrue(result.isPresent());
-        assertEquals(recipeCandidateExact, result.get());
-
-        result = PlatformHelper.findBestMatch(platformToTest, Arrays.asList(
-                recipeCandidateMismatch,
-                recipeCandidateOptional,
                 recipeCandidateAny,
                 recipeCandidateExact));
 
         assertTrue(result.isPresent());
-        assertEquals(recipeCandidateOptional, result.get());
+        assertEquals(recipeCandidateExact, result.get());
     }
 
     @Test

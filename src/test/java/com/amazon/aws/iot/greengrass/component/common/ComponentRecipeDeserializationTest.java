@@ -122,12 +122,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .get(0);
         assertEquals("windows", manifest.getPlatform().get("os"));
         assertEquals("amd64", manifest.getPlatform().get("architecture"));
-        assertThat(manifest.getPlatform().get("random"), Is.is(instanceOf(List.class)));
-        assertThat((List<?>)manifest.getPlatform().get("random"),
-                contains(
-                        equalTo("list"),
-                        equalTo("of"),
-                        equalTo("options")));
+        assertEquals("/list|of|options/", manifest.getPlatform().get("random"));
         assertThat(manifest.getLifecycle()
                 .size(), Is.is(0)); // deprecated
         assertThat(manifest.getSelections(),

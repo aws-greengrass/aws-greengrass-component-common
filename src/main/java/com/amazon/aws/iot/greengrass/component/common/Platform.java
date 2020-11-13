@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -16,18 +17,18 @@ import java.util.function.Function;
  *     <ul>
  *         <li>name=stringValue - where stringValue beings with letter or digit - perform an exact match.</li>
  *         <li>name=/regex/ - match string against regular expression string.</li>
- *         <li>name=[v1, v2, v3, ...] - provide alternatives (stringValue, regex, etc).</li>
- *         <li>name="//" - match string against anything, but must have a value ("must exist").</li>
- *         <li>name=[] - match string against anything, but string need not have a value.</li>
+ *         <li>name="*" - match string against anything, but must have a value ("must exist").</li>
  *     </ul>
  */
-public class Platform extends HashMap<String,Object> {
+public class Platform extends HashMap<String,String> {
     // This is really a map
     // Existing code assumes a Platform class with some methods, so this helps smooth the code migration process
     //@Deprecated
     public static final String ALL_KEYWORD = "all";
     // Platform with no key/value pairs
     public static final Platform EMPTY = new Platform();
+    public static final String OS_KEY = "os";
+    public static final String ARCHITECTURE_KEY = "architecture";
 
     //@Deprecated
     private <T extends Enum<T>> T getEnum(String name, Function<String, T> transform) {
@@ -42,13 +43,13 @@ public class Platform extends HashMap<String,Object> {
     // This is transitional
     //@Deprecated
     public OS getOs() {
-        return getEnum("os", OS::getOS);
+        return getEnum(OS_KEY, OS::getOS);
     }
 
     // This is transitional
     //@Deprecated
     public Architecture getArchitecture() {
-        return getEnum("architecture", Architecture::getArch);
+        return getEnum(ARCHITECTURE_KEY, Architecture::getArch);
     }
 
     /**
@@ -74,7 +75,7 @@ public class Platform extends HashMap<String,Object> {
          */
         public static OS getOS(String value) {
             // "any" and "all" keyword are both accepted in recipe.
-            if (value == null || "any".equalsIgnoreCase(value) || "all".equalsIgnoreCase(value)) {
+            if (value == null || "any".equalsIgnoreCase(value) || "all".equalsIgnoreCase(value) || "*".equals(value)) {
                 return OS.ALL;
             }
 
@@ -112,7 +113,7 @@ public class Platform extends HashMap<String,Object> {
          * @return enum value
          */
         public static Architecture getArch(String value) {
-            if (value == null || "any".equalsIgnoreCase(value) || "all".equalsIgnoreCase(value)) {
+            if (value == null || "any".equalsIgnoreCase(value) || "all".equalsIgnoreCase(value) || "*".equals(value)) {
                 // "any" and "all" keyword are both accepted in recipe.
                 return Architecture.ALL;
             }
@@ -124,5 +125,44 @@ public class Platform extends HashMap<String,Object> {
             }
             return Architecture.UNKNOWN;
         }
+    }
+
+    /**
+     * This is to help migration to new Platform class
+     */
+    //@Deprecated
+    public static final class PlatformBuilder {
+        private final Map<String, String> platform = new HashMap<String,String>();
+
+        public PlatformBuilder os(OS value) {
+            if (value == OS.ALL) {
+                return add(OS_KEY, "*");
+            } else {
+                return add(OS_KEY, value.name);
+            }
+        }
+
+        public PlatformBuilder architecture(Architecture value) {
+            if (value == Architecture.ALL) {
+                return add(ARCHITECTURE_KEY, "*");
+            } else {
+                return add(ARCHITECTURE_KEY, value.name);
+            }
+        }
+
+        public PlatformBuilder add(String name, String value) {
+            platform.put(name, value);
+            return this;
+        }
+
+        public Platform build() {
+            Platform p = new Platform();
+            p.putAll(this.platform);
+            return p;
+        }
+    }
+
+    public static PlatformBuilder builder() {
+        return new PlatformBuilder();
     }
 }

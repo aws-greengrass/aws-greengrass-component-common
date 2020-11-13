@@ -21,10 +21,7 @@ Manifests:
   - Platform:
       os: windows
       architecture: amd64
-      random:
-        - list
-        - of
-        - options
+      random: /list|of|options/
     Parameters:
       - Name: TestParam
         Value: 'TestValue'
