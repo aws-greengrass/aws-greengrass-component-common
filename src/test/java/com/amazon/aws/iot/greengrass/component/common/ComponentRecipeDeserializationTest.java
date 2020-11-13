@@ -27,9 +27,7 @@ import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.emptyCollectionOf;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -131,6 +129,7 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                         equalTo("two"),
                         equalTo("three"),
                         equalTo("four")));
+        assertThat(manifest.getName(), equalTo("Platform 1"));
 
         // verify param
         List<ComponentParameter> parameters = manifest.getParameters();
@@ -171,7 +170,8 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertThat(manifest.getPlatform(), IsNull.nullValue());
         assertThat(manifest.getLifecycle()
                 .size(), Is.is(0)); // deprecated
-        assertThat(manifest.getSelections(), emptyCollectionOf(String.class));
+        assertThat(manifest.getSelections(), IsNull.nullValue());
+        assertThat(manifest.getName(), IsNull.nullValue());
         assertThat(manifest.getArtifacts()
                 .size(), Is.is(1));
         artifact = manifest.getArtifacts()

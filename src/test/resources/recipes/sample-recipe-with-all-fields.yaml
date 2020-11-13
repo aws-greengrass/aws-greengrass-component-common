@@ -18,7 +18,8 @@ ComponentConfiguration:
     SecondItem:
       message: 'goodbye'
 Manifests:
-  - Platform:
+  - Name: Platform 1
+    Platform:
       os: windows
       architecture: amd64
       random: /list|of|options/

@@ -26,6 +26,7 @@
   },
   "Manifests": [
     {
+      "Name": "Platform 1",
       "Platform": {
         "os": "windows",
         "architecture": "amd64",
