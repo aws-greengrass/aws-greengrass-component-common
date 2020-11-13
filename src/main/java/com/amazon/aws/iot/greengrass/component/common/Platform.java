@@ -29,15 +29,25 @@ public class Platform extends HashMap<String,String> {
     public static final Platform EMPTY = new Platform();
     public static final String OS_KEY = "os";
     public static final String ARCHITECTURE_KEY = "architecture";
+    public static final String WILDCARD = "*";
+
+    /**
+     * Retrieve specified field. Use wildcard if field does not exist or empty string.
+     * @param name Name of field
+     * @return Field, substituting wildcard as needed.
+     */
+    public String getFieldOrWild(String name) {
+        Object o = get(name);
+        if (o == null || ((String)o).length() == 0) {
+            return WILDCARD;
+        } else {
+            return (String)o;
+        }
+    }
 
     //@Deprecated
     private <T extends Enum<T>> T getEnum(String name, Function<String, T> transform) {
-        Object o = get(name);
-        if (o instanceof String) {
-            return transform.apply((String)o);
-        } else {
-            return transform.apply(null);
-        }
+        return transform.apply(getFieldOrWild(name));
     }
 
     // This is transitional
@@ -50,6 +60,22 @@ public class Platform extends HashMap<String,String> {
     //@Deprecated
     public Architecture getArchitecture() {
         return getEnum(ARCHITECTURE_KEY, Architecture::getArch);
+    }
+
+    /**
+     * Retrieve OS, or Wildcard if OS not specified
+     * @return OS as a string with expected default.
+     */
+    public String getOsField() {
+        return getFieldOrWild(OS_KEY);
+    }
+
+    /**
+     * Retrieve Architecture, or Wildcard if Architecture not specified
+     * @return Architecture as a string with expected default.
+     */
+    public String getArchitectureField() {
+        return getFieldOrWild(ARCHITECTURE_KEY);
     }
 
     /**

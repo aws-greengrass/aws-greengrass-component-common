@@ -28,10 +28,16 @@ public class PlatformSpecificManifest {
     @Builder.Default
     Platform platform = null;
 
+    /**
+     * Friendly name of this platform. If missing, UI name is derived from set of attributes in Platform
+     */
+    @Builder.Default
+    String name = null;
+
     @Builder.Default
     List<ComponentParameter> parameters = Collections.emptyList();
 
-    @Deprecated // Remove for re:Invent
+    @Deprecated // Plan to remove for re:Invent
     @Builder.Default
     Map<String, Object> lifecycle = Collections.emptyMap();
 
@@ -42,10 +48,10 @@ public class PlatformSpecificManifest {
     Map<String, DependencyProperties> dependencies = Collections.emptyMap();
 
     /**
-     * Set of lifecycle selections enabled by this platform
+     * Set of lifecycle selections enabled by this platform (optional)
      */
     @Builder.Default
-    List<String> selections = Collections.emptyList();
+    List<String> selections = null;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class PlatformSpecificManifestBuilder {

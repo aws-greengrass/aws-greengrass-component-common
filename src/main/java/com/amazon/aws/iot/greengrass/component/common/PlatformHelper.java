@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public final class PlatformHelper {
 
     // this test exists so to allow future extension, a platform label should not start with special characters
-    private static Pattern SIMPLE_LABEL = Pattern.compile("^[a-zA-Z0-9]");
+    private static final Pattern SIMPLE_LABEL = Pattern.compile("^[a-zA-Z0-9]");
 
     private PlatformHelper() {
     }
@@ -48,7 +48,7 @@ public final class PlatformHelper {
         if (label == null) {
             return false; // in all other cases, label must not be null
         }
-        if (template.equals("*")) {
+        if (template.equals(Platform.WILDCARD)) {
             return true; // explicit non-null (has value) test (actual non-null was tested above)
         }
         if (template.length() >= 2 && template.startsWith("/") && template.endsWith("/")) {
