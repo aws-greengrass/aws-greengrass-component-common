@@ -5,7 +5,9 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsMapContaining;
+import org.hamcrest.collection.IsMapWithSize;
 import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.Assertions;
@@ -16,11 +18,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.Data;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -70,6 +79,27 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         verifyRecipeWithAllFields(recipe);
     }
 
+    @Test
+    void GIVEN_recipe_with_missing_permission_fields_yaml_WHEN_attempt_to_deserialize_THEN_return_instantiated_model_instance() throws IOException {
+        String filename = "sample-recipe-missing-permission-fields.yaml";
+        Path recipePath = getResourcePath(filename);
+
+        ComponentRecipe recipe = DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
+                ComponentRecipe.class);
+
+        assertThat(recipe.getManifests(), Matchers.not(Matchers.empty()));
+
+        // only checking permissions here
+        recipe.getManifests().forEach(m -> {
+            assertThat(m.getArtifacts(), Matchers.not(Matchers.empty()));
+            m.getArtifacts().forEach(a -> {
+                assertThat(a.getPermission().getRead(), Is.is(PermissionType.OWNER));
+                assertThat(a.getPermission().getExecute(), Is.is(PermissionType.NONE));
+            });
+        });
+    }
+
+
     void verifyRecipeWithAllFields(final ComponentRecipe recipe) {
         assertThat(recipe.getComponentName(), Is.is("FooService"));
         assertThat(recipe.getComponentVersion()
@@ -88,11 +118,18 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .size(), Is.is(2));
         PlatformSpecificManifest manifest = recipe.getManifests()
                 .get(0);
-        assertEquals(Platform.OS.WINDOWS, manifest.getPlatform().getOs());
-        assertEquals(Platform.Architecture.AMD64, manifest.getPlatform().getArchitecture());
+        assertEquals("windows", manifest.getPlatform().get("os"));
+        assertEquals("amd64", manifest.getPlatform().get("architecture"));
+        assertEquals("/list|of|options/", manifest.getPlatform().get("random"));
         assertThat(manifest.getLifecycle()
-                .size(), Is.is(1));
-        assertThat(manifest.getLifecycle(), IsMapContaining.hasKey("Install"));
+                .size(), Is.is(0)); // deprecated
+        assertThat(manifest.getSelections(),
+                contains(
+                        equalTo("one"),
+                        equalTo("two"),
+                        equalTo("three"),
+                        equalTo("four")));
+        assertThat(manifest.getName(), equalTo("Platform 1"));
 
         // verify param
         List<ComponentParameter> parameters = manifest.getParameters();
@@ -116,6 +153,8 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertThat(artifact.getDigest(), Is.is("d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f"));
         assertThat(artifact.getAlgorithm(), Is.is("SHA-256"));
         assertThat(artifact.getUnarchive(), Is.is(Unarchive.ZIP));
+        assertThat(artifact.getPermission().getRead(), Is.is(PermissionType.ALL));
+        assertThat(artifact.getPermission().getExecute(), Is.is(PermissionType.ALL));
         assertThat(manifest.getDependencies()
                 .size(), Is.is(2));
         assertThat(manifest.getDependencies(), IsMapContaining.hasEntry("BarService",
@@ -130,8 +169,9 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .get(1);
         assertThat(manifest.getPlatform(), IsNull.nullValue());
         assertThat(manifest.getLifecycle()
-                .size(), Is.is(1));
-        assertThat(manifest.getLifecycle(), IsMapContaining.hasKey("Start"));
+                .size(), Is.is(0)); // deprecated
+        assertThat(manifest.getSelections(), IsNull.nullValue());
+        assertThat(manifest.getName(), IsNull.nullValue());
         assertThat(manifest.getArtifacts()
                 .size(), Is.is(1));
         artifact = manifest.getArtifacts()
@@ -140,11 +180,25 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .toString(), Is.is("s3://some-bucket/hello_world.py"));
         assertThat(artifact.getDigest(), Is.is("d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f"));
         assertThat(artifact.getAlgorithm(), Is.is("SHA-256"));
+        assertThat(artifact.getPermission().getRead(), Is.is(PermissionType.ALL));
+        assertThat(artifact.getPermission().getExecute(), Is.is(PermissionType.ALL));
+
         assertThat(manifest.getDependencies()
                 .size(), Is.is(1));
         assertThat(manifest.getDependencies(), IsMapContaining.hasEntry("BazService",
                 new DependencyProperties.DependencyPropertiesBuilder().versionRequirement("^2.0")
                         .build()));
+
+        // Lifecycle has now moved back to recipe. It has a very fluid syntax
+        assertThat(recipe.getLifecycle(), allOf(
+                aMapWithSize(3),
+                hasKey(equalTo("one")),
+                hasKey(equalTo("two")),
+                hasKey(equalTo("any"))));
+        assertThat(recipe.getLifecycle().get("any"), instanceOf(Map.class));
+        assertThat((Map<String,Object>)recipe.getLifecycle().get("any"), allOf(
+                aMapWithSize(1),
+                hasKey(equalTo("Install"))));
 
         // Accessing configuration using JsonPointer
         assertThat(recipe.getComponentConfiguration().getDefaultConfiguration().
@@ -203,10 +257,12 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .size(), Is.is(1));
         PlatformSpecificManifest manifest = recipe.getManifests()
                 .get(0);
-        assertEquals(Platform.OS.LINUX, manifest.getPlatform().getOs());
-        assertEquals(Platform.Architecture.AMD64, manifest.getPlatform().getArchitecture());
+        assertEquals("linux", manifest.getPlatform().get("os"));
+        assertEquals("amd64", manifest.getPlatform().get("architecture"));
         assertThat(manifest.getLifecycle()
+                .size(), Is.is(0));
+        assertThat(recipe.getLifecycle()
                 .size(), Is.is(1));
-        assertThat(manifest.getLifecycle(), IsMapContaining.hasEntry("Install", "apt-get install python3.7"));
+        assertThat(recipe.getLifecycle(), IsMapContaining.hasEntry("Install", "apt-get install python3.7"));
     }
 }

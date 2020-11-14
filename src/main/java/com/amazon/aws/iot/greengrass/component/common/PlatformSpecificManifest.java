@@ -3,6 +3,7 @@
 
 package com.amazon.aws.iot.greengrass.component.common;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Builder;
@@ -17,11 +18,29 @@ import java.util.Map;
 @Builder
 public class PlatformSpecificManifest {
 
-    Platform platform;
+    /**
+     * Map of key/value pairs, with the following behaviors:
+     * <ul>
+     *     <li>Name=String - exact match as long as string begins with letter or digit
+     *             String must begin with [-A-Za-z0-9_$] though set may be extended</li>
+     *     <li>Name=/String/ - regular expression match (not yet implemented)</li>
+     *     <li>Name=[Spec1, Spec2, Spec3] - alternative matches</li>
+     * </ul>
+     * A String beginning with any other symbol is reserved for future use.
+     */
+    @Builder.Default
+    Platform platform = null;
+
+    /**
+     * Friendly name of this platform. If missing, UI name is derived from set of attributes in Platform
+     */
+    @Builder.Default
+    String name = null;
 
     @Builder.Default
     List<ComponentParameter> parameters = Collections.emptyList();
 
+    @Deprecated // Plan to remove for re:Invent
     @Builder.Default
     Map<String, Object> lifecycle = Collections.emptyMap();
 
@@ -30,6 +49,12 @@ public class PlatformSpecificManifest {
 
     @Builder.Default
     Map<String, DependencyProperties> dependencies = Collections.emptyMap();
+
+    /**
+     * Set of lifecycle selections enabled by this platform (optional)
+     */
+    @Builder.Default
+    List<String> selections = null;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class PlatformSpecificManifestBuilder {

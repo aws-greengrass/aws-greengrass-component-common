@@ -9,10 +9,10 @@
       "Platform": {
         "os": "linux",
         "architecture": "amd64"
-      },
-      "Lifecycle": {
-        "Install": "apt-get install python3.7"
       }
     }
-  ]
+  ],
+  "Lifecycle": {
+    "Install": "apt-get install python3.7"
+  }
 }
