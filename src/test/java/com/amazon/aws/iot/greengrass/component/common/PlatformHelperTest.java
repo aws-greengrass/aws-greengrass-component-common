@@ -228,7 +228,7 @@ public class PlatformHelperTest {
                 recipeCandidateExact));
 
         assertTrue(result.isPresent());
-        assertEquals(recipeCandidateExact, result.get());
+        assertEquals(recipeCandidateAny, result.get());
     }
 
     @Test
