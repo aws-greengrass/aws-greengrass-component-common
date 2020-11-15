@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ComponentRecipeSerializationTest extends BaseRecipeTest {
 
@@ -32,6 +33,22 @@ class ComponentRecipeSerializationTest extends BaseRecipeTest {
         assertThat("Serialization to json should not generate new empty field to maintain backward compatibility",
                 !resultRecipeJson.contains("componentDependencies") && !resultRecipeJson.contains(
                         "ComponentDependencies"));
+    }
+
+    @Test
+    void GIVEN_a_b2_recipe_file_yaml_WHEN_we_deserialize_it_THEN_all_fields_are_parsed()
+            throws IOException {
+        String filename = "b2-recipe-with-all-fields.json";
+        Path recipePath = getResourcePath(filename);
+
+        //
+        // While we cannot determine B2 recipe is handled correctly here, we can at least make sure that the
+        // data model can read a B2 recipe.
+        //
+
+        String recipeString = new String(Files.readAllBytes(recipePath));
+        ComponentRecipe recipe = DESERIALIZER_JSON.readValue(recipeString, ComponentRecipe.class);
+        assertTrue(recipe != null); // effectively a schema validation pass and making sure we got a value
     }
 
     @Test

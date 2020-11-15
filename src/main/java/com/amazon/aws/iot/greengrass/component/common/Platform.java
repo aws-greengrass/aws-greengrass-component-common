@@ -17,7 +17,7 @@ import java.util.function.Function;
  *     <ul>
  *         <li>name=stringValue - where stringValue beings with letter or digit - perform an exact match.</li>
  *         <li>name=/regex/ - match string against regular expression string.</li>
- *         <li>name="*" - match string against anything, but must have a value ("must exist").</li>
+ *         <li>name="*" - match string against anything, including missing value.</li>
  *     </ul>
  */
 public class Platform extends HashMap<String,String> {
@@ -177,7 +177,9 @@ public class Platform extends HashMap<String,String> {
         }
 
         public PlatformBuilder add(String name, String value) {
-            platform.put(name, value);
+            if (value != null) {
+                platform.put(name, value);
+            }
             return this;
         }
 
