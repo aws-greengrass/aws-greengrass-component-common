@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Data
 @Builder
@@ -15,7 +16,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConfigurationValidationPolicy {
-    private Integer timeout;
+
+    public static final Integer DEFAULT_TIMEOUT = 60;
+
+    @NonNull
+    @Builder.Default
+    private Integer timeout = DEFAULT_TIMEOUT;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class ConfigurationValidationPolicyBuilder {
