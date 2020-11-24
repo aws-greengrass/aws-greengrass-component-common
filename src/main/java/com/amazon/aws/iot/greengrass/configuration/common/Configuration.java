@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -22,6 +22,8 @@ import java.util.Map;
 @JsonSerialize
 @JsonDeserialize(builder = Configuration.ConfigurationBuilder.class)
 public class Configuration {
+
+    public static final FailureHandlingPolicy DEFAULT_FAILURE_HANDLING_POLICY = FailureHandlingPolicy.ROLLBACK;
 
     private String deploymentId;
 
@@ -33,13 +35,21 @@ public class Configuration {
 
     @NonNull
     @Builder.Default
-    private Map<String, ComponentUpdate> components = Collections.emptyMap();
+    private Map<String, ComponentUpdate> components = new HashMap<>();
 
-    private FailureHandlingPolicy failureHandlingPolicy;
+    @NonNull
+    @Builder.Default
+    private FailureHandlingPolicy failureHandlingPolicy = DEFAULT_FAILURE_HANDLING_POLICY;
 
-    private ComponentUpdatePolicy componentUpdatePolicy;
+    @NonNull
+    @Builder.Default
+    private ComponentUpdatePolicy componentUpdatePolicy = ComponentUpdatePolicy.builder()
+            .build();
 
-    private ConfigurationValidationPolicy configurationValidationPolicy;
+    @NonNull
+    @Builder.Default
+    private ConfigurationValidationPolicy configurationValidationPolicy = ConfigurationValidationPolicy.builder()
+            .build();
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class ConfigurationBuilder {

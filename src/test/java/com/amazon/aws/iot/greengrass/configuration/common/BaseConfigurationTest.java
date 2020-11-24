@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 
 public class BaseConfigurationTest {
 
-    static final ObjectMapper DESERIALIZER_JSON = SerializerFactory.getRecipeSerializerJson();
+    static final ObjectMapper DESERIALIZER_JSON = SerializerFactory.getConfigurationSerializerJson();
 
     static String CONFIGURATION_RESOURCE_PATH = "configurations";
 

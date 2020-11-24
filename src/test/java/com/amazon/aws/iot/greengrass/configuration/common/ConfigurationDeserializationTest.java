@@ -27,6 +27,19 @@ import static org.hamcrest.Matchers.notNullValue;
 class ConfigurationDeserializationTest extends BaseConfigurationTest {
 
     @Test
+    void GIVEN_no_args_WHEN_new_configuration_THEN_use_defaults() {
+        Configuration configuration = Configuration.builder().build();
+        assertThat(configuration.getFailureHandlingPolicy(),
+                Is.is(Configuration.DEFAULT_FAILURE_HANDLING_POLICY));
+        assertThat(configuration.getComponentUpdatePolicy().getAction(),
+                Is.is(ComponentUpdatePolicy.DEFAULT_ACTION));
+        assertThat(configuration.getComponentUpdatePolicy().getTimeout(),
+                Is.is(ComponentUpdatePolicy.DEFAULT_TIMEOUT));
+        assertThat(configuration.getConfigurationValidationPolicy().getTimeout(),
+                Is.is(ConfigurationValidationPolicy.DEFAULT_TIMEOUT));
+    }
+
+    @Test
     void GIVEN_configuration_1_component_replace_THEN_return_instantiated_model_instance() throws IOException {
         String filename = "configuration-1-component-replace.json";
         Path configurationPath = getResourcePath(filename);
@@ -48,6 +61,9 @@ class ConfigurationDeserializationTest extends BaseConfigurationTest {
         ComponentUpdate component = configuration.getComponents().get("MyThermostatComponent");
         assertThat(component, notNullValue());
         assertThat(component.getVersion().getValue(), Is.is("1.0.0"));
+
+        RunWith runWith = component.getRunWith();
+        assertThat(runWith.getPosixUser(), Is.is("user:group"));
 
         ConfigurationUpdate configurationUpdate = component.getConfigurationUpdate();
         assertThat(configurationUpdate, notNullValue());
