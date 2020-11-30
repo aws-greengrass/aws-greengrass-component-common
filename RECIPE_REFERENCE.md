@@ -38,6 +38,8 @@ Manifests:
   - Platform:
       os: windows
       architecture: amd64
+    # Friendly name of platform (not of component)
+    Name: Windows AMD64
     # parameter is deprecating, the section is undocumented to external customers
     Parameters:
       - Name: repeat
@@ -49,9 +51,12 @@ Manifests:
       - Name: print
         Value: false
         Type: BOOLEAN
+    # lifecycle can be passed per manifest, or passed common to all manifests
     Lifecycle:
       Run:
         python3 {{artifacts:path}}/hello_windows_server.py '{{params:greeting.value}}'
+    # If lifecycle not specified for multi-platform, selections will typically be specified instead
+    Selections: [windows]
     Artifacts:
       - URI: s3://some-bucket/hello_windows.zip
         Unarchive: ZIP
@@ -82,6 +87,13 @@ Manifests:
     Dependencies:
       variant.Python3:
         VersionRequirement: ^3.5
+# alternative lifecycle specification
+Lifecycle:
+  Run:
+    # Selection keyword (see detailed notes)
+    windows:
+        python3 {{artifacts:path}}/hello_windows_server.py '{{params:greeting.value}}'
+
 ```
 The topics on this reference are organized by top-level keys in terms of providing component metadata or
  defining platform specific manifest. Top-level keys can have options that support them as sub-topics. This
@@ -144,22 +156,50 @@ Don't use!!! Under active development...
 
 ### Manifests
 Define a list of manifests, a manifest is specific to one platform or default to every other platform.
-#### Manifest.Platform
+#### Manifests.Platform
 Define the platform the manifest is specifically for.
 ```yaml
 Platform:
   os: windows
   architecture: amd64
+  keyword3: label
+  keyword4: *
+  keyword5: /a|b/
 ```
-- supported operating system:
+- Example operating system:
     - linux
     - windows
-    - darwin   
-- supported architecture:
+    - darwin
+    - \*   
+- Example architecture:
     - amd64
     - arm
+    - \*
+This section consists of key/value pairs. The key can have any name, although "os" and "architecture" will always be
+defined. Additional keys will depend on the OS and Architecture. It is also possible to override and/or define
+additional keys via system configuration. When a label (not beginning with a symbol) is specified, an exact match
+is assumed. The symbol "*" means any (including no) value. A Java-style regular expression can be specified, e.g.
+"/windows|linux/". The regular expression "/.+/" will match any non-blank value. 
 
-#### Manifest.Parameters 
+A platform matches if (and only if) all conditions hold. Thus the above platform would match if Nucleus specifies:
+```yaml
+os: windows
+architecture: amd64
+keyword3: label
+keyword5: b
+```
+Keyword3 and Keyword4 would have to be provided by platform overrides in configuration in this case.
+It would fail if Nucleus specifies only:
+```yaml
+os: windows
+architecture: amd64
+```
+
+#### Manifests.Name
+If specified, provides a friendly name representing the platform in UX. If not specified, a name is created based
+off of os and architecture. 
+
+#### Manifests.Parameters 
 > deprecating, moving towards JSON schema definition, prepare to migrate after beta 2
 
 Define the parameter list can be used by component at runtime
@@ -176,8 +216,9 @@ Parameters:
     Type: BOOLEAN
 ```
 
-#### Manifest.Lifecycle
-Specify lifecycle management scripts for component represented service
+#### Manifests.Lifecycle
+Specify lifecycle management scripts for component represented service, specific to given platform. See also
+"Manifest.Selections" and (global) "Lifecycle" further down.
 ```yaml
 Lifecycle:
   Setenv: # apply to all commands to the service.
@@ -227,7 +268,16 @@ Lifecycle:
   UpdatesCompleted:
     Script:
 ```
-#### Manifest.Artifacts
+#### Manifests.Selections
+An optional list of selection keys to apply to the global lifecycle section (described further down).
+```yaml
+Selections: [debian, linux, all]
+```
+Keys are used to select sub-sections of the global lifecycle in order of precedence. For example, if the Lifecycle
+section contains "debian", "linux" and "all" keys at a given level, only "debian" key is used. However if the Lifecycle
+section contains only "linux" and "all", the "linux" key is used. "all" is optional and is assumed. Thus "[linux]" is
+the same as "[linux, all]". If no selections are specified, "[all]" is assumed.
+#### Manifests.Artifacts
 A list of artifacts that component uses as resources, such as binary, scripts, images etc.
 ```yaml
 Artifacts:
@@ -262,3 +312,60 @@ Specify if dependency is `HARD` or `SOFT` dependency. `HARD` means dependent ser
  service changes state. In the opposite, `SOFT` means the service will wait the dependency to start when first
   starting, but will not be restarted if the dependency changes state.
 
+### Global Lifecycle
+If Lifecycle section exists outside of the Manifests section, it applies to all manifests that do not specify a
+lifecycle. In this case, the Selections list is used to select sub-sections of the lifecycle section. Consider the
+following yaml:
+```yaml
+Lifecycle:
+  key1:
+    Install:
+      Skipif: onpath <executable>|exists <file>
+      Script: command1
+  key2:
+    Install:
+      Script: command2
+  all:
+    Install:
+      Script: command3
+```
+In the above example, if the matching platform contained Selections [key1,all], then the lifecycle section will be
+rewritten as:
+```yaml
+Lifecycle:
+  Install:
+    Skipif: onpath <executable>|exists <file>
+    Script: command1
+```
+Similarly if the matching platform contained Selections [key4], then the lifecycle section would be rewritten as:
+```yaml
+Lifecycle:
+  Install:
+    Script: command3
+```
+The selections keywords can be applied at any level, so this is also valid:
+```yaml
+Lifecycle:
+  Install:
+    Script:
+      key1: command1
+      key2: command2
+      all: command3
+```
+Selection keywords can also be mixed:
+```yaml
+Lifecycle:
+  key1:
+    Install:
+      Skipif: onpath <executable>|exists <file>
+      Script: command1
+  key2:
+    Install:
+      Script: command2
+  all:
+    Install:
+      Script:
+        key3: command3
+        key4: command4
+        all: command5
+```

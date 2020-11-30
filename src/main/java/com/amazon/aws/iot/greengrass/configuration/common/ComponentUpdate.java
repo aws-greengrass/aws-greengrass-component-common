@@ -26,6 +26,8 @@ public class ComponentUpdate {
 
     private ConfigurationUpdate configurationUpdate;
 
+    private RunWith runWith;
+
     @JsonPOJOBuilder(withPrefix = "")
     public static class ComponentUpdateBuilder {
     }

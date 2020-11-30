@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Data
 @Builder
@@ -18,8 +19,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComponentUpdatePolicy {
-    private Integer timeout;
-    private Action action;
+
+    public static final Integer DEFAULT_TIMEOUT = 60;
+    public static final Action DEFAULT_ACTION = Action.NOTIFY_COMPONENTS;
+
+    @NonNull
+    @Builder.Default
+    private Integer timeout = DEFAULT_TIMEOUT;
+
+    @NonNull
+    @Builder.Default
+    private Action action = DEFAULT_ACTION;
 
     public enum Action {
         NOTIFY_COMPONENTS,

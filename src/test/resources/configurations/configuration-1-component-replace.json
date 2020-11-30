@@ -25,6 +25,9 @@
           "/rooms/Office",
           "/rooms/Conference Room"
         ]
+      },
+      "runWith": {
+        "posixUser": "user:group"
       }
     }
   },
