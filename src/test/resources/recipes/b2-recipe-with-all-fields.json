@@ -30,18 +30,6 @@
         "os": "windows",
         "architecture": "amd64"
       },
-      "Parameters": [
-        {
-          "Name": "TestParam",
-          "Value": "TestValue",
-          "Type": "STRING"
-        },
-        {
-          "Name": "TestParamEmpty",
-          "Value": "",
-          "Type": "STRING"
-        }
-      ],
       "Lifecycle": {
         "Install": {
           "Skipif": "onpath git",
@@ -68,16 +56,7 @@
             "Execute": "OWNER"
           }
         }
-      ],
-      "Dependencies": {
-        "BarService": {
-          "VersionRequirement": "^1.1",
-          "DependencyType": "soft"
-        },
-        "BazService": {
-          "VersionRequirement": "^2.0"
-        }
-      }
+      ]
     },
     {
       "Lifecycle": {
@@ -96,12 +75,7 @@
             "Execute": "ALL"
           }
         }
-      ],
-      "Dependencies": {
-        "BazService": {
-          "VersionRequirement": "^2.0"
-        }
-      }
+      ]
     }
   ]
 }
