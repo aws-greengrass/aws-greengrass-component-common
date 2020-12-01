@@ -1,5 +1,7 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0 */
+/*
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 package com.amazon.aws.iot.greengrass.component.common;
 
@@ -20,7 +22,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import lombok.Data;
@@ -134,19 +135,6 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                         equalTo("four")));
         assertThat(manifest.getName(), equalTo("Platform 1"));
 
-        // verify param
-        List<ComponentParameter> parameters = manifest.getParameters();
-        assertThat(parameters
-                .size(), Is.is(2));
-        ComponentParameter testParam = parameters.get(0);
-        assertThat(testParam.getName(), Is.is("TestParam"));
-        assertThat(testParam.getValue(), Is.is("TestValue"));
-        assertThat(testParam.getType(), Is.is(ComponentParameter.ParameterType.STRING));
-        ComponentParameter testParamEmpty = parameters.get(1);
-        assertThat(testParamEmpty.getName(), Is.is("TestParamEmpty"));
-        assertThat(testParamEmpty.getValue(), Is.is(""));
-        assertThat(testParamEmpty.getType(), Is.is(ComponentParameter.ParameterType.STRING));
-
         assertThat(manifest.getArtifacts()
                 .size(), Is.is(2));
         ComponentArtifact artifact = manifest.getArtifacts()
@@ -158,15 +146,6 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertThat(artifact.getUnarchive(), Is.is(Unarchive.ZIP));
         assertThat(artifact.getPermission().getRead(), Is.is(PermissionType.ALL));
         assertThat(artifact.getPermission().getExecute(), Is.is(PermissionType.ALL));
-        assertThat(manifest.getDependencies()
-                .size(), Is.is(2));
-        assertThat(manifest.getDependencies(), IsMapContaining.hasEntry("BarService",
-                new DependencyProperties.DependencyPropertiesBuilder().versionRequirement("^1.1")
-                        .dependencyType(DependencyType.SOFT)
-                        .build()));
-        assertThat(manifest.getDependencies(), IsMapContaining.hasEntry("BazService",
-                new DependencyProperties.DependencyPropertiesBuilder().versionRequirement("^2.0")
-                        .build()));
 
         manifest = recipe.getManifests()
                 .get(1);
@@ -185,12 +164,6 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertThat(artifact.getAlgorithm(), Is.is("SHA-256"));
         assertThat(artifact.getPermission().getRead(), Is.is(PermissionType.ALL));
         assertThat(artifact.getPermission().getExecute(), Is.is(PermissionType.ALL));
-
-        assertThat(manifest.getDependencies()
-                .size(), Is.is(1));
-        assertThat(manifest.getDependencies(), IsMapContaining.hasEntry("BazService",
-                new DependencyProperties.DependencyPropertiesBuilder().versionRequirement("^2.0")
-                        .build()));
 
         // Lifecycle has now moved back to recipe. It has a very fluid syntax
         assertThat(recipe.getLifecycle(), allOf(

@@ -32,18 +32,6 @@
         "architecture": "amd64",
         "random": "/list|of|options/"
       },
-      "Parameters": [
-        {
-          "Name": "TestParam",
-          "Value": "TestValue",
-          "Type": "STRING"
-        },
-        {
-          "Name": "TestParamEmpty",
-          "Value": "",
-          "Type": "STRING"
-        }
-      ],
       "Artifacts": [
         {
           "URI": "s3://some-bucket/hello_world.py",
@@ -65,15 +53,6 @@
           }
         }
       ],
-      "Dependencies": {
-        "BarService": {
-          "VersionRequirement": "^1.1",
-          "DependencyType": "soft"
-        },
-        "BazService": {
-          "VersionRequirement": "^2.0"
-        }
-      },
       "Selections": [
         "one",
         "two",
@@ -92,12 +71,7 @@
             "Execute": "ALL"
           }
         }
-      ],
-      "Dependencies": {
-        "BazService": {
-          "VersionRequirement": "^2.0"
-        }
-      }
+      ]
     }
   ],
   "Lifecycle": {

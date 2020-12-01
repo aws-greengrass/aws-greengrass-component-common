@@ -1,9 +1,10 @@
-/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0 */
+/*
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 package com.amazon.aws.iot.greengrass.component.common;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Builder;
@@ -38,17 +39,10 @@ public class PlatformSpecificManifest {
     String name = null;
 
     @Builder.Default
-    List<ComponentParameter> parameters = Collections.emptyList();
-
-    @Deprecated // Plan to remove for re:Invent
-    @Builder.Default
     Map<String, Object> lifecycle = Collections.emptyMap();
 
     @Builder.Default
     List<ComponentArtifact> artifacts = Collections.emptyList();
-
-    @Builder.Default
-    Map<String, DependencyProperties> dependencies = Collections.emptyMap();
 
     /**
      * Set of lifecycle selections enabled by this platform (optional)
