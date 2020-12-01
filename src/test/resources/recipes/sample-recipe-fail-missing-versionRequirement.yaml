@@ -5,6 +5,7 @@ ComponentDescription: Test recipe for Evergreen packages
 ComponentPublisher: Me
 ComponentVersion: '1.0.0'
 ComponentType: aws.greengrass.plugin
+ComponentDependencies:
+  abc: {}
 Manifests:
-  - Dependencies:
-      abc: {}
+  -

@@ -34,16 +34,10 @@ public class PlatformSpecificManifest {
     String name = null;
 
     @Builder.Default
-    List<ComponentParameter> parameters = Collections.emptyList();
-
-    @Builder.Default
     Map<String, Object> lifecycle = Collections.emptyMap();
 
     @Builder.Default
     List<ComponentArtifact> artifacts = Collections.emptyList();
-
-    @Builder.Default
-    Map<String, DependencyProperties> dependencies = Collections.emptyMap();
 
     /**
      * Set of lifecycle selections enabled by this platform (optional)
