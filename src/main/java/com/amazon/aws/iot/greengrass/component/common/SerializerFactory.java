@@ -10,17 +10,20 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class SerializerFactory {
     private static final ObjectMapper YAML_RECIPE_SERIALIZER =
             new ObjectMapper(new YAMLFactory())
+                    .setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE)
                     .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
                     .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
                     .setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     private static final ObjectMapper JSON_RECIPE_SERIALIZER =
             new ObjectMapper(new JsonFactory())
+                    .setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE)
                     .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
                     .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
                     .setSerializationInclusion(JsonInclude.Include.NON_NULL)
