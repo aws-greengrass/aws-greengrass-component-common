@@ -1,0 +1,4 @@
+---
+RecipeFormatVersion: 2020-01-25
+ComponentName: aws.greengrass.foo bar service
+ComponentVersion: '1.0.0'

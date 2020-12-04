@@ -97,6 +97,27 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         });
     }
 
+    @Test
+    void GIVEN_recipe_with_illegal_component_name_yaml_WHEN_attempt_to_deserialize_THEN_throws_exception() {
+        String filename = "sample-recipe-with-illegal-component-name.yaml";
+        Path recipePath = getResourcePath(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
+                        ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("Component name could only include characters of"));
+    }
+
+    @Test
+    void GIVEN_recipe_with_long_component_version_yaml_WHEN_attempt_to_deserialize_THEN_throws_exception() {
+        String filename = "sample-recipe-with-long-component-version.yaml";
+        Path recipePath = getResourcePath(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
+                        ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("Component version length exceeds"));
+    }
 
     void verifyRecipeWithAllFields(final ComponentRecipe recipe) {
         assertThat(recipe.getComponentName(), Is.is("FooService"));
