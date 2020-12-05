@@ -11,6 +11,7 @@ import lombok.Value;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @JsonDeserialize(builder = ComponentRecipe.ComponentRecipeBuilder.class)
 @Value
@@ -39,14 +40,33 @@ public class ComponentRecipe {
 
     Map<String, DependencyProperties> componentDependencies;
 
-    @Builder.Default
-    List<PlatformSpecificManifest> manifests = Collections.emptyList();
+    List<PlatformSpecificManifest> manifests;
 
     @Builder.Default
     Map<String, Object> lifecycle = Collections.emptyMap();
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class ComponentRecipeBuilder {
+        private List<PlatformSpecificManifest> manifests = Collections.emptyList(); // default to empty list
+
+        public ComponentRecipeBuilder manifests(List<PlatformSpecificManifest> manifests) {
+            // override lombok generated builder for custom validation
+            if (manifests == null) {
+                // allow null manifests to be friendly
+                // treat it as empty list for safer processing since not required to
+                // differentiate null vs empty list for manifests
+                this.manifests = Collections.emptyList();
+                return this;
+            }
+
+            if (manifests.stream().anyMatch(Objects::isNull)) {
+                // doesn't allow list contain any null element
+                throw new IllegalArgumentException("Manifests contains one or more null element(s)");
+            }
+
+            this.manifests = manifests;
+            return this;
+        }
     }
 
 }

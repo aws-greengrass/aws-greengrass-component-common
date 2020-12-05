@@ -235,4 +235,44 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
                 .size(), Is.is(1));
         assertThat(recipe.getLifecycle(), IsMapContaining.hasEntry("Install", "apt-get install python3.7"));
     }
+
+    @Test
+    void GIVEN_a_component_recipe_json_has_null_element_in_artifacts_WHEN_deserialize_THEN_fail_with_validation_error() {
+        String filename = "error-recipe-contains-null-element-in-artifacts.json";
+        Path recipePath = getResourcePath(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_JSON.readValue(recipePath.toFile(), ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("Artifacts contains one or more null element(s)"));
+    }
+
+    @Test
+    void GIVEN_a_component_recipe_yaml_has_null_element_in_artifacts_WHEN_deserialize_THEN_fail_with_validation_error() {
+        String filename = "error-recipe-contains-null-element-in-artifacts.yaml";
+        Path recipePath = getResourcePath(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_YAML.readValue(recipePath.toFile(), ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("Artifacts contains one or more null element(s)"));
+    }
+
+    @Test
+    void GIVEN_a_component_recipe_json_has_null_element_in_manifests_WHEN_deserialize_THEN_fail_with_validation_error() {
+        String filename = "error-recipe-contains-null-element-in-manifests.json";
+        Path recipePath = getResourcePath(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_JSON.readValue(recipePath.toFile(), ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("Manifests contains one or more null element(s)"));
+    }
+
+    @Test
+    void GIVEN_a_component_recipe_yaml_has_null_element_in_manifests_WHEN_deserialize_THEN_fail_with_validation_error() {
+        String filename = "error-recipe-contains-null-element-in-manifests.yaml";
+        Path recipePath = getResourcePath(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_YAML.readValue(recipePath.toFile(), ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("Manifests contains one or more null element(s)"));
+    }
 }

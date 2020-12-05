@@ -1,0 +1,15 @@
+---
+RecipeFormatVersion: 2020-01-25
+ComponentName: PythonRuntime
+ComponentDescription: Test recipe for Evergreen packages
+ComponentPublisher: Me
+ComponentVersion: '1.1.0'
+Manifests:
+  - Platform:
+      os: linux
+      architecture: amd64
+    Artifacts:
+      - # means a null element in YAML. Not to confuse with an object with all fields as null.
+Lifecycle:
+  Install:
+    apt-get install python3.7
