@@ -26,6 +26,7 @@ class ComponentRecipeTest {
     void GIVEN_long_component_name_WHEN_build_component_recipe_THEN_throw_illegal_argument_exception() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> ComponentRecipe.builder()
                 .componentName(
+                        "Long_component_name_exceed_limit_Long_component_name_exceed_limit_Long_component_name_exceed_limit_" +
                         "Long_component_name_exceed_limit_Long_component_name_exceed_limit_Long_component_name_exceed_limit")
                 .componentVersion(new Semver("1.0.0"))
                 .build());

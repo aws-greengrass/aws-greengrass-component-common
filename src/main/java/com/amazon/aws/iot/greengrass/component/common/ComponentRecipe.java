@@ -20,7 +20,7 @@ import java.util.Objects;
 @Builder
 public class ComponentRecipe {
     private static final Pattern COMPONENT_NAME_PATTERN = Pattern.compile("[^a-zA-Z0-9-_.]");
-    private static final int COMPONENT_NAME_LENGTH = 64;
+    private static final int COMPONENT_NAME_LENGTH = 128;
     private static final int COMPONENT_MAX_VERSION_NUMBER = 999999;
     private static final int COMPONENT_VERSION_LENGTH = 64;
 
