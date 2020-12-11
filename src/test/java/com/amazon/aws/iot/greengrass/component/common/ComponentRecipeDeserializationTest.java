@@ -103,6 +103,27 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         });
     }
 
+    @Test
+    void GIVEN_recipe_with_illegal_component_name_yaml_WHEN_attempt_to_deserialize_THEN_throws_exception() {
+        String filename = "sample-recipe-with-illegal-component-name.yaml";
+        Path recipePath = getResourcePath(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
+                        ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("Component name could only include characters of"));
+    }
+
+    @Test
+    void GIVEN_recipe_with_long_component_version_yaml_WHEN_attempt_to_deserialize_THEN_throws_exception() {
+        String filename = "sample-recipe-with-long-component-version.yaml";
+        Path recipePath = getResourcePath(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_YAML.readValue(new String(Files.readAllBytes(recipePath)),
+                        ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("Component version length exceeds"));
+    }
 
     void verifyRecipeWithAllFields(final ComponentRecipe recipe) {
         assertThat(recipe.getComponentName(), Is.is("FooService"));
@@ -240,5 +261,45 @@ class ComponentRecipeDeserializationTest extends BaseRecipeTest {
         assertThat(recipe.getLifecycle()
                 .size(), Is.is(1));
         assertThat(recipe.getLifecycle(), IsMapContaining.hasEntry("Install", "apt-get install python3.7"));
+    }
+
+    @Test
+    void GIVEN_a_component_recipe_json_has_null_element_in_artifacts_WHEN_deserialize_THEN_fail_with_validation_error() {
+        String filename = "error-recipe-contains-null-element-in-artifacts.json";
+        Path recipePath = getResourcePath(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_JSON.readValue(recipePath.toFile(), ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("Artifacts contains one or more null element(s)"));
+    }
+
+    @Test
+    void GIVEN_a_component_recipe_yaml_has_null_element_in_artifacts_WHEN_deserialize_THEN_fail_with_validation_error() {
+        String filename = "error-recipe-contains-null-element-in-artifacts.yaml";
+        Path recipePath = getResourcePath(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_YAML.readValue(recipePath.toFile(), ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("Artifacts contains one or more null element(s)"));
+    }
+
+    @Test
+    void GIVEN_a_component_recipe_json_has_null_element_in_manifests_WHEN_deserialize_THEN_fail_with_validation_error() {
+        String filename = "error-recipe-contains-null-element-in-manifests.json";
+        Path recipePath = getResourcePath(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_JSON.readValue(recipePath.toFile(), ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("Manifests contains one or more null element(s)"));
+    }
+
+    @Test
+    void GIVEN_a_component_recipe_yaml_has_null_element_in_manifests_WHEN_deserialize_THEN_fail_with_validation_error() {
+        String filename = "error-recipe-contains-null-element-in-manifests.yaml";
+        Path recipePath = getResourcePath(filename);
+
+        IOException ex = assertThrows(IOException.class,
+                () -> DESERIALIZER_YAML.readValue(recipePath.toFile(), ComponentRecipe.class));
+        assertThat(ex.getMessage(), containsString("Manifests contains one or more null element(s)"));
     }
 }

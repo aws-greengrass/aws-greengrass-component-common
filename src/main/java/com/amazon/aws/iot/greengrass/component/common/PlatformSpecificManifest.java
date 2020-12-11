@@ -13,6 +13,7 @@ import lombok.Value;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @JsonDeserialize(builder = PlatformSpecificManifest.PlatformSpecificManifestBuilder.class)
 @Value
@@ -41,8 +42,7 @@ public class PlatformSpecificManifest {
     @Builder.Default
     Map<String, Object> lifecycle = Collections.emptyMap();
 
-    @Builder.Default
-    List<ComponentArtifact> artifacts = Collections.emptyList();
+    List<ComponentArtifact> artifacts;
 
     /**
      * Set of lifecycle selections enabled by this platform (optional)
@@ -52,6 +52,26 @@ public class PlatformSpecificManifest {
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class PlatformSpecificManifestBuilder {
-    }
+        private List<ComponentArtifact> artifacts = Collections.emptyList(); // default to empty list
 
+        public PlatformSpecificManifestBuilder artifacts(List<ComponentArtifact> artifacts) {
+            // override lombok generated builder for custom validation and processing
+
+            if (artifacts == null) {
+                // allow null artifacts to be friendly
+                // treat it as empty list for safer processing since not required to
+                // differentiate null vs empty list for artifacts
+                this.artifacts = Collections.emptyList();
+                return this;
+            }
+
+            if (artifacts.stream().anyMatch(Objects::isNull)) {
+                // doesn't allow list contain any null elements
+                throw new IllegalArgumentException("Artifacts contains one or more null element(s)");
+            }
+
+            this.artifacts = artifacts;
+            return this;
+        }
+    }
 }
