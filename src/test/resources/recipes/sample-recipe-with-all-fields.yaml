@@ -1,0 +1,66 @@
+---
+RecipeFormatVersion: 2020-01-25
+ComponentName: FooService
+ComponentDescription: Test recipe for Greengrass packages
+ComponentPublisher: Me
+ComponentVersion: '1.0.0'
+ComponentType: aws.greengrass.plugin
+ComponentDependencies:
+  BarService:
+    VersionRequirement: ^1.1
+    DependencyType: soft
+  BazService:
+    VersionRequirement: ^2.0
+ComponentConfiguration:
+  DefaultConfiguration:
+    FirstItem:
+      message: 'hello'
+    SecondItem:
+      message: 'goodbye'
+Manifests:
+  - Name: Platform 1
+    Platform:
+      os: windows
+      architecture: amd64
+      random: /list|of|options/
+    Artifacts:
+      - URI: s3://some-bucket/hello_world.py
+        Digest: d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f
+        Algorithm: SHA-256
+        Unarchive: ZIP
+        Permission:
+          Read: ALL
+          Execute: ALL
+      - URI: s3//some-bucket/hello-world2.py
+        Digest: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        Algorithm: SHA-256
+        Permission:
+          Read: ALL
+          Execute: OWNER
+    Selections:
+      - one
+      - two
+      - three
+      - four
+  - Artifacts:
+      - URI: s3://some-bucket/hello_world.py
+        Digest: d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f
+        Algorithm: SHA-256
+        Permission:
+          Read: ALL
+          Execute: ALL
+Lifecycle:
+  one:
+    Install:
+      Skipif: onpath git
+      Script: sudo apt-get install git
+  two:
+    Install:
+      three:
+        Skipif: onpath git
+        Script: sudo apt-get install git
+  any:
+    Install:
+      Skipif:
+        four: onpath git
+      Script: sudo apt-get install git

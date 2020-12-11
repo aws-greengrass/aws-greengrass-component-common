@@ -1,0 +1,11 @@
+---
+RecipeFormatVersion: 2020-01-25
+ComponentName: FooService
+ComponentDescription: Test recipe for Greengrass packages
+ComponentPublisher: Me
+ComponentVersion: '1.0.0'
+ComponentType: aws.greengrass.plugin
+Manifests:
+  - Artifacts:
+      - Digest: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        Algorithm: SHA-256
