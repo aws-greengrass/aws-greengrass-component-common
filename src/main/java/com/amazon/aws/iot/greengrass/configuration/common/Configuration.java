@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -52,6 +53,9 @@ public class Configuration {
     @Builder.Default
     private ConfigurationValidationPolicy configurationValidationPolicy = ConfigurationValidationPolicy.builder()
             .build();
+
+    // Enum can't be used because values are expected to be expanded and the field should always be de-serializable
+    private List<String> requiredCapabilities;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class ConfigurationBuilder {
