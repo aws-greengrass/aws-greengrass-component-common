@@ -18,13 +18,16 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 class ConfigurationDeserializationTest extends BaseConfigurationTest {
 
@@ -50,6 +53,20 @@ class ConfigurationDeserializationTest extends BaseConfigurationTest {
                 new String(Files.readAllBytes(configurationPath)), Configuration.class);
 
         verifyConfiguration1ComponentReplace(configuration);
+        assertThat(configuration.getRequiredCapabilities(), is(null));
+    }
+
+    @Test
+    void GIVEN_configuration_1_required_capabilities_THEN_return_instantiated_model_instance() throws IOException {
+        String filename = "configuration-1-with-required-capabilities.json";
+        Path configurationPath = getResourcePath(filename);
+
+        Configuration configuration = DESERIALIZER_JSON.readValue(
+                new String(Files.readAllBytes(configurationPath)), Configuration.class);
+
+        verifyConfiguration1ComponentReplace(configuration);
+        assertThat(configuration.getRequiredCapabilities(), equalTo(Arrays.asList("LARGE_CONFIGURATION",
+                "ANOTHER_CAPABILITY")));
     }
 
     void verifyConfiguration1ComponentReplace(final Configuration configuration) throws JsonProcessingException {

@@ -30,4 +30,19 @@ class ConfigurationSerializationTest extends BaseConfigurationTest {
 
         assertThat(copy, Is.is(original));
     }
+
+    @Test
+    void GIVEN_deploy_1_component_required_capabilities_WHEN_we_deserialize_it_and_serialize_it_back_THEN_we_get_the_same_thing()
+            throws IOException {
+        String filename = "configuration-1-with-required-capabilities.json";
+        Path configurationPath = getResourcePath(filename);
+
+        Configuration original = DESERIALIZER_JSON.readValue(
+                new String(Files.readAllBytes(configurationPath)), Configuration.class);
+
+        Configuration copy = DESERIALIZER_JSON.readValue(
+                DESERIALIZER_JSON.writeValueAsString(original), Configuration.class);
+
+        assertThat(copy, Is.is(original));
+    }
 }
