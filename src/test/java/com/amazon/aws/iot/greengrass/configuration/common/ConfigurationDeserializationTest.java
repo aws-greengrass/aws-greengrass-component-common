@@ -27,6 +27,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 class ConfigurationDeserializationTest extends BaseConfigurationTest {
@@ -53,7 +54,7 @@ class ConfigurationDeserializationTest extends BaseConfigurationTest {
                 new String(Files.readAllBytes(configurationPath)), Configuration.class);
 
         verifyConfiguration1ComponentReplace(configuration);
-        assertThat(configuration.getRequiredCapabilities(), is(null));
+        assertThat(configuration.getRequiredCapabilities(), is(nullValue()));
     }
 
     @Test
