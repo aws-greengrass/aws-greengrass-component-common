@@ -14,11 +14,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +28,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class ConfigurationDeserializationTest extends BaseConfigurationTest {
+
+public class ConfigurationDeserializationTest extends BaseConfigurationTest {
+
+    private static final Long MEMORY = Long.valueOf(64);
 
     @Test
     void GIVEN_no_args_WHEN_new_configuration_THEN_use_defaults() {
@@ -43,34 +46,22 @@ class ConfigurationDeserializationTest extends BaseConfigurationTest {
                 Is.is(ComponentUpdatePolicy.DEFAULT_TIMEOUT));
         assertThat(configuration.getConfigurationValidationPolicy().getTimeout(),
                 Is.is(ConfigurationValidationPolicy.DEFAULT_TIMEOUT));
+        assertThat(configuration.getRequiredCapabilities().size(), Is.is(0));
+        assertThat(configuration.getSchemaDate(), Is.is(Configuration.DEFAULT_SCHEMA_DATE));
     }
 
-    @Test
-    void GIVEN_configuration_1_component_replace_THEN_return_instantiated_model_instance() throws IOException {
-        String filename = "configuration-1-component-replace.json";
+    @ParameterizedTest
+    @ValueSource(strings = {"configuration-1-component-replace.json", "configuration-2-component-replace.json"})
+    void GIVEN_configuration_1_component_replace_THEN_return_instantiated_model_instance(String filename) throws IOException {
         Path configurationPath = getResourcePath(filename);
 
         Configuration configuration = DESERIALIZER_JSON.readValue(
                 new String(Files.readAllBytes(configurationPath)), Configuration.class);
 
-        verifyConfiguration1ComponentReplace(configuration);
-        assertThat(configuration.getRequiredCapabilities(), is(nullValue()));
+        verifyConfiguration1ComponentReplace(configuration, filename);
     }
 
-    @Test
-    void GIVEN_configuration_1_required_capabilities_THEN_return_instantiated_model_instance() throws IOException {
-        String filename = "configuration-1-with-required-capabilities.json";
-        Path configurationPath = getResourcePath(filename);
-
-        Configuration configuration = DESERIALIZER_JSON.readValue(
-                new String(Files.readAllBytes(configurationPath)), Configuration.class);
-
-        verifyConfiguration1ComponentReplace(configuration);
-        assertThat(configuration.getRequiredCapabilities(), equalTo(Arrays.asList("LARGE_CONFIGURATION",
-                "ANOTHER_CAPABILITY")));
-    }
-
-    void verifyConfiguration1ComponentReplace(final Configuration configuration) throws JsonProcessingException {
+    void verifyConfiguration1ComponentReplace(final Configuration configuration, final String filename) throws JsonProcessingException {
         assertThat(configuration.getFailureHandlingPolicy(), Is.is(FailureHandlingPolicy.fromString("DO_NOTHING")));
         assertThat(configuration.getConfigurationValidationPolicy().getTimeout(), Is.is(30000));
         assertThat(configuration.getComponentUpdatePolicy().getTimeout(), Is.is(5000));
@@ -84,6 +75,12 @@ class ConfigurationDeserializationTest extends BaseConfigurationTest {
 
         RunWith runWith = component.getRunWith();
         assertThat(runWith.getPosixUser(), Is.is("user:group"));
+        if (filename.equals("configuration-2-component-replace.json")) {
+            assertNotNull(runWith.getSystemResourceLimits());
+            assertNotNull(runWith.getSystemResourceLimits().linux);
+            assertThat(runWith.getSystemResourceLimits().linux.getMemory(), is(MEMORY));
+            assertThat(runWith.getSystemResourceLimits().linux.getCpu(), is(51.27));
+        }
 
         ConfigurationUpdate configurationUpdate = component.getConfigurationUpdate();
         assertThat(configurationUpdate, notNullValue());
@@ -109,6 +106,9 @@ class ConfigurationDeserializationTest extends BaseConfigurationTest {
         assertThat(modeledConfig.rooms.get("Kitchen").getTemperature(), Is.is(25));
         assertThat(modeledConfig.rooms.get("Office").getTemperature(), Is.is(22));
         assertThat(modeledConfig.rooms.get("Conference Room").getTemperature(), Is.is(20));
+
+        assertThat(configuration.getSchemaDate(), Is.is(SchemaDate.MAY_17_2021));
+        assertThat(configuration.getRequiredCapabilities().size(), Is.is(0));
     }
 
     @Data

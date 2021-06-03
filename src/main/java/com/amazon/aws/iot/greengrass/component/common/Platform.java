@@ -95,7 +95,7 @@ public class Platform extends HashMap<String,String> {
         UNKNOWN("unknown");
 
         private final String name;
-        
+
         /**
          * Backward compatibility only for transition: Convert string to enum value.
          * @param value String value to convert
@@ -134,7 +134,7 @@ public class Platform extends HashMap<String,String> {
         UNKNOWN("unknown");
 
         private final String name;
-        
+
         /**
          * Backward compatibility only for transition: Convert string to enum value.
          * @param value String value to convert

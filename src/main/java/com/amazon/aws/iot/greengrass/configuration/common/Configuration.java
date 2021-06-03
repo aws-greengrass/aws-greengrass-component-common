@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,13 @@ public class Configuration {
 
     public static final FailureHandlingPolicy DEFAULT_FAILURE_HANDLING_POLICY = FailureHandlingPolicy.ROLLBACK;
 
+    public static final SchemaDate DEFAULT_SCHEMA_DATE = SchemaDate.MAY_17_2021;
+
     private String deploymentId;
+
+    @NonNull
+    @Builder.Default
+    private SchemaDate schemaDate = DEFAULT_SCHEMA_DATE;
 
     private String deploymentName;
 
@@ -46,6 +53,11 @@ public class Configuration {
 
     @NonNull
     @Builder.Default
+    // Enum can't be used because values are expected to be expanded and the field should always be de-serializable
+    private List<String> requiredCapabilities = new ArrayList<>();
+
+    @NonNull
+    @Builder.Default
     private ComponentUpdatePolicy componentUpdatePolicy = ComponentUpdatePolicy.builder()
             .build();
 
@@ -53,9 +65,6 @@ public class Configuration {
     @Builder.Default
     private ConfigurationValidationPolicy configurationValidationPolicy = ConfigurationValidationPolicy.builder()
             .build();
-
-    // Enum can't be used because values are expected to be expanded and the field should always be de-serializable
-    private List<String> requiredCapabilities;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class ConfigurationBuilder {
