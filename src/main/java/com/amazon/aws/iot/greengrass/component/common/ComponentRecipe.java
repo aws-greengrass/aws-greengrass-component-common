@@ -24,7 +24,7 @@ import java.util.Objects;
 @Value
 @Builder
 public class ComponentRecipe {
-    private static final Pattern COMPONENT_NAME_PATTERN = Pattern.compile("[^a-zA-Z0-9-_.]");
+    public static final Pattern COMPONENT_NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9-_.]+$");
     private static final int COMPONENT_NAME_LENGTH = 128;
     private static final int COMPONENT_MAX_VERSION_NUMBER = 999999;
     private static final int COMPONENT_VERSION_LENGTH = 64;
@@ -91,7 +91,7 @@ public class ComponentRecipe {
                         COMPONENT_NAME_LENGTH));
             } else {
                 Matcher matcher = COMPONENT_NAME_PATTERN.matcher(name);
-                if (matcher.find()) {
+                if (!matcher.find()) {
                     throw new IllegalArgumentException(
                             "Component name could only include characters of ALPHA/DIGIT/\"-\"/\".\"/\"_\"");
                 }

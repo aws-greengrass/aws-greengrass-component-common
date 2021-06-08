@@ -16,15 +16,16 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @JsonSerialize
-@JsonDeserialize(builder = RunWith.RunWithBuilder.class)
+@JsonDeserialize(builder = Linux.LinuxBuilder.class)
 @AllArgsConstructor
 @NoArgsConstructor
-public class RunWith {
-    private String posixUser;
+public class Linux {
 
-    private SystemResourceLimits systemResourceLimits;
+    private Long memory;
+
+    private Double cpu;
 
     @JsonPOJOBuilder(withPrefix = "")
-    public static class RunWithBuilder {
+    public static class LinuxBuilder {
     }
 }
