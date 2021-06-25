@@ -77,9 +77,8 @@ public class ConfigurationDeserializationTest extends BaseConfigurationTest {
         assertThat(runWith.getPosixUser(), Is.is("user:group"));
         if (filename.equals("configuration-2-component-replace.json")) {
             assertNotNull(runWith.getSystemResourceLimits());
-            assertNotNull(runWith.getSystemResourceLimits().linux);
-            assertThat(runWith.getSystemResourceLimits().linux.getMemory(), is(MEMORY));
-            assertThat(runWith.getSystemResourceLimits().linux.getCpu(), is(51.27));
+            assertThat(runWith.getSystemResourceLimits().getMemory(), is(MEMORY));
+            assertThat(runWith.getSystemResourceLimits().getCpu(), is(51.27));
         }
 
         ConfigurationUpdate configurationUpdate = component.getConfigurationUpdate();
