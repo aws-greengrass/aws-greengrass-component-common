@@ -29,10 +29,8 @@
       "runWith": {
         "posixUser": "user:group",
         "systemResourceLimits": {
-          "linux": {
-            "memory": 64,
-            "cpu": 51.27
-          }
+          "memory": 64,
+          "cpu": 51.27
         }
       }
     }

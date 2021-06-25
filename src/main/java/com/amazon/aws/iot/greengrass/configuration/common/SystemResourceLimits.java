@@ -20,8 +20,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SystemResourceLimits {
+    private Long memory;
 
-    Linux linux;
+    private Double cpu;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class SystemResourceLimitsBuilder {
