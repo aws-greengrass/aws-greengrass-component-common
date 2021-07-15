@@ -30,7 +30,7 @@
         "posixUser": "user:group",
         "systemResourceLimits": {
           "memory": 64,
-          "cpu": 51.27
+          "cpus": 51.27
         }
       }
     }

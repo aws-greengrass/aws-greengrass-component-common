@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 public class SystemResourceLimits {
     private Long memory;
 
-    private Double cpu;
+    private Double cpus;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class SystemResourceLimitsBuilder {
