@@ -78,7 +78,7 @@ public class ConfigurationDeserializationTest extends BaseConfigurationTest {
         if (filename.equals("configuration-2-component-replace.json")) {
             assertNotNull(runWith.getSystemResourceLimits());
             assertThat(runWith.getSystemResourceLimits().getMemory(), is(MEMORY));
-            assertThat(runWith.getSystemResourceLimits().getCpu(), is(51.27));
+            assertThat(runWith.getSystemResourceLimits().getCpus(), is(51.27));
         }
 
         ConfigurationUpdate configurationUpdate = component.getConfigurationUpdate();
