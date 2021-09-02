@@ -22,6 +22,8 @@ import lombok.NoArgsConstructor;
 public class RunWith {
     private String posixUser;
 
+    private String windowsUser;
+
     private SystemResourceLimits systemResourceLimits;
 
     @JsonPOJOBuilder(withPrefix = "")
