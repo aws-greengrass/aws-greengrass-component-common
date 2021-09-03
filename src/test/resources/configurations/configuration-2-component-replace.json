@@ -28,6 +28,7 @@
       },
       "runWith": {
         "posixUser": "user:group",
+        "windowsUser": "winuser",
         "systemResourceLimits": {
           "memory": 64,
           "cpus": 51.27
