@@ -19,7 +19,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 class ConfigurationSerializationTest extends BaseConfigurationTest {
 
     @ParameterizedTest
-    @ValueSource(strings = {"configuration-1-component-replace.json", "configuration-2-component-replace.json"})
+    @ValueSource(strings = {
+            "configuration-1-component-replace.json",
+            "configuration-2-component-replace.json",
+            "configuration-1-redeploy.json"
+    })
     void GIVEN_deployment_config_WHEN_deserialized_and_serialized_THEN_return_orig_config(String filename)
             throws IOException {
         Path configurationPath = getResourcePath(filename);
