@@ -51,7 +51,11 @@ public class ConfigurationDeserializationTest extends BaseConfigurationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"configuration-1-component-replace.json", "configuration-2-component-replace.json"})
+    @ValueSource(strings = {
+            "configuration-1-component-replace.json",
+            "configuration-2-component-replace.json",
+            "configuration-1-redeploy.json"
+    })
     void GIVEN_configuration_1_component_replace_THEN_return_instantiated_model_instance(String filename) throws IOException {
         Path configurationPath = getResourcePath(filename);
 

@@ -41,6 +41,10 @@ public class Configuration {
 
     private String configurationArn;
 
+    private String parentTargetArn;
+
+    private String onBehalfOf;
+
     private Long creationTimestamp;
 
     @NonNull
