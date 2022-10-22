@@ -8,5 +8,5 @@ package com.amazon.aws.iot.greengrass.configuration.common;
 public enum DeploymentCapability {
     LARGE_CONFIGURATION,
     LINUX_RESOURCE_LIMITS,
-    SUBGROUP_DEPLOYMENTS
+    SUB_DEPLOYMENTS
 }
