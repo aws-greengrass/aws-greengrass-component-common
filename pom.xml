@@ -64,6 +64,7 @@
         </pluginRepository>
     </pluginRepositories>
     <build>
+        <finalName>${jar.name}</finalName>
         <extensions>
             <extension>
                 <groupId>fi.yle.tools</groupId>
@@ -133,6 +134,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <jar.name>aws.greengrass.component.common</jar.name>
     </properties>
     <distributionManagement>
         <snapshotRepository>
