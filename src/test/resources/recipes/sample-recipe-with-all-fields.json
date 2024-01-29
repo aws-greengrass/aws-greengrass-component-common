@@ -8,7 +8,7 @@
   "ComponentDependencies": {
     "BarService": {
       "VersionRequirement": "^1.1",
-      "DependencyType": "soft"
+      "DependencyType": "SOFT"
     },
     "BazService": {
       "VersionRequirement": "^2.0"
