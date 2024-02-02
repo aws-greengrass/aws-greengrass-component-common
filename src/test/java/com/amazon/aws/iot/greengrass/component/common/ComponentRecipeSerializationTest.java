@@ -5,11 +5,11 @@
 
 package com.amazon.aws.iot.greengrass.component.common;
 
+import com.amazon.aws.iot.greengrass.semver.SemVer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.vdurmont.semver4j.Semver;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
@@ -121,6 +121,6 @@ class ComponentRecipeSerializationTest extends BaseRecipeTest {
 
     private ComponentRecipe getDummyComponentRecipe() {
         return ComponentRecipe.builder().componentName("test").recipeFormatVersion(RecipeFormatVersion.JAN_25_2020)
-                .componentVersion(new Semver("1.0.0")).build();
+                .componentVersion(new SemVer("1.0.0")).build();
     }
 }
