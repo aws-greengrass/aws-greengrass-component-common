@@ -5,20 +5,20 @@
 
 package com.amazon.aws.iot.greengrass.component.common;
 
+import com.amazon.aws.iot.greengrass.semver.Range;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.vdurmont.semver4j.Requirement;
 
 import java.io.IOException;
 
-public class RequirementSerializer extends StdSerializer<Requirement> {
+public class RequirementSerializer extends StdSerializer<Range> {
     public RequirementSerializer() {
-        super(Requirement.class);
+        super(Range.class);
     }
 
     @Override
-    public void serialize(final Requirement value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
+    public void serialize(final Range value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
         final String version = value.toString();
         gen.writeString(version);
     }
