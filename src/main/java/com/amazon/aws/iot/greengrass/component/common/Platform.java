@@ -31,6 +31,7 @@ public class Platform extends HashMap<String,String> {
     public static final Platform EMPTY = new Platform();
     public static final String OS_KEY = "os";
     public static final String ARCHITECTURE_KEY = "architecture";
+    public static final String RUNTIME_KEY = "runtime";
     public static final String WILDCARD = "*";
 
     /**
@@ -78,6 +79,14 @@ public class Platform extends HashMap<String,String> {
      */
     public String getArchitectureField() {
         return getFieldOrWild(ARCHITECTURE_KEY);
+    }
+
+    /**
+     * Retrieve Runtime, or Wildcard if Runtime not specified
+     * @return Runtime as a string with expected default.
+     */
+    public String getRuntimeField() {
+        return getFieldOrWild(RUNTIME_KEY);
     }
 
     /**
@@ -176,6 +185,10 @@ public class Platform extends HashMap<String,String> {
             } else {
                 return add(ARCHITECTURE_KEY, value.name);
             }
+        }
+
+        public PlatformBuilder runtime(String value) {
+            return add(RUNTIME_KEY, value);
         }
 
         public PlatformBuilder add(String name, String value) {
