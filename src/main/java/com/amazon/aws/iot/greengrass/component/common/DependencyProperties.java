@@ -6,10 +6,10 @@
 package com.amazon.aws.iot.greengrass.component.common;
 
 
+import com.amazon.aws.iot.greengrass.semver.Range;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.vdurmont.semver4j.Requirement;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
@@ -19,13 +19,13 @@ import lombok.Value;
 public class DependencyProperties {
     @JsonSerialize(using = RequirementSerializer.class)
     @NonNull
-    Requirement versionRequirement;
+    Range versionRequirement;
 
     DependencyType dependencyType;
 
     @Builder
     public DependencyProperties(@NonNull String versionRequirement, DependencyType dependencyType) {
-        this.versionRequirement = Requirement.buildNPM(versionRequirement);
+        this.versionRequirement = new Range(versionRequirement);
         this.dependencyType = dependencyType == null ? DependencyType.HARD : dependencyType;
     }
 

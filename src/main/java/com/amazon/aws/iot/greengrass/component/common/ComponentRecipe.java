@@ -5,20 +5,20 @@
 
 package com.amazon.aws.iot.greengrass.component.common;
 
+import com.amazon.aws.iot.greengrass.semver.SemVer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.vdurmont.semver4j.Semver;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @JsonDeserialize(builder = ComponentRecipe.ComponentRecipeBuilder.class)
 @Value
@@ -37,7 +37,7 @@ public class ComponentRecipe {
 
     @NonNull
     @JsonSerialize(using = SemverSerializer.class)
-    Semver componentVersion;
+    SemVer componentVersion;
 
     @Builder.Default
     ComponentType componentType = ComponentType.GENERIC;
@@ -100,7 +100,7 @@ public class ComponentRecipe {
             }
         }
 
-        public ComponentRecipeBuilder componentVersion(Semver version) {
+        public ComponentRecipeBuilder componentVersion(SemVer version) {
             if (version == null) {
                 throw new NullPointerException("Component version is null");
             } else {
@@ -108,9 +108,9 @@ public class ComponentRecipe {
                     throw new IllegalArgumentException(String.format("Component version length exceeds %d characters",
                             COMPONENT_VERSION_LENGTH));
                 }
-                if (version.getMajor() > COMPONENT_MAX_VERSION_NUMBER
-                        || version.getMinor() > COMPONENT_MAX_VERSION_NUMBER
-                        || version.getPatch() > COMPONENT_MAX_VERSION_NUMBER) {
+                if (version.major > COMPONENT_MAX_VERSION_NUMBER
+                        || version.minor > COMPONENT_MAX_VERSION_NUMBER
+                        || version.patch > COMPONENT_MAX_VERSION_NUMBER) {
                     throw new IllegalArgumentException("Component version major, minor, patch can't exceed 6 digits");
                 }
                 this.componentVersion = version;
